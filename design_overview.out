@@ -1,0 +1,11 @@
+\BOOKMARK [1][-]{section.1}{Overview}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{End-states}{section.1}% 2
+\BOOKMARK [1][-]{section.2}{Implementation}{}% 3
+\BOOKMARK [2][-]{subsection.2.1}{Important types}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.2}{Important methods}{section.2}% 5
+\BOOKMARK [3][-]{subsubsection.2.2.1}{Sudoku}{subsection.2.2}% 6
+\BOOKMARK [3][-]{subsubsection.2.2.2}{CellContainer}{subsection.2.2}% 7
+\BOOKMARK [3][-]{subsubsection.2.2.3}{Cell}{subsection.2.2}% 8
+\BOOKMARK [3][-]{subsubsection.2.2.4}{Strategy}{subsection.2.2}% 9
+\BOOKMARK [3][-]{subsubsection.2.2.5}{Solver}{subsection.2.2}% 10
+\BOOKMARK [1][-]{section.3}{Style Guide}{}% 11
