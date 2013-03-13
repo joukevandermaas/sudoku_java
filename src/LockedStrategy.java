@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /* 
- * if there are 2 or 3 possibilities on a column that are the same and don't occur
+ * if there 2 or 3 possibilities on a column that are the same and don't occur
  * in another place in the square then remove those possibilities on every
  * other place on the same column
  */
@@ -23,12 +23,12 @@ public class LockedStrategy implements Strategy {
 		boolean changed = false;
 		// System.out.print("LockedStrategy");
 
-		int columns = Sudoku.SQUARE_COLUMNS;
-		for (int i=1; i<=columns; i++) {
+		// for cell in same square and row, search for possibilities only in one
+		// row
+		for (CellContainer col : puzzle.getColumns()) {
 
-			List<List<Integer>> retainedPossSquare = null;
-			
-			for (CellContainer col : puzzle.getColumns()) {
+			int columns = Sudoku.SQUARE_COLUMNS;
+			for (int i = 1; i <= columns; i++) {
 				List<Cell> squareCol = new ArrayList<Cell>();
 
 				int range = columns * i;
@@ -37,45 +37,41 @@ public class LockedStrategy implements Strategy {
 					squareCol.add(c);
 				}
 
-				retainedPossSquare.add(retainPoss(squareCol));
-			}
-			
-			/*
-			for (int j=0; j<retainedPossSquare.size(); j++) {
-				List<Integer> poss = retainedPossSquare.get(j);
-				if (!poss.isEmpty()) {
-					if (poss.retainAll(retainedPossSquare.get(j+1))) {
-						
+				// for(Cell c : squareCol) { //per cell
+				for (int j = 1; j < 3; j++) {
+					Cell c = squareCol.get(j);
+					List<Integer> poss = c.getPossibilities();
+
+					if (!squareCol.get(2).hasValue()
+							|| !squareCol.get(3).hasValue()) {
+						if (!squareCol.get(2).hasValue()) {
+							List<Integer> poss2 = squareCol.get(2)
+									.getPossibilities();
+							int size2 = poss2.size();
+							for (int k = 0; k < size2; k++) {
+								// if (poss2.get(k));
+							}
+						}
+						int possSize = poss.size();
+						for (int k = 0; k < possSize; k++) {
+
+							// possPerCol[k] = poss.get(k);
+							System.out.print(poss.get(k));
+						}
+						// System.out.print(poss.retainAll(poss.get(1)));
+						// poss.get(0);
+						System.out.print("bla");
+
 					}
 				}
-			}*/
+				System.out.println();
+			}
+
+			// System.out.println();
 
 		}
 
 		return changed;
 	}
 
-	// retaines possible values of a column in a square
-	public List<Integer> retainPoss(List<Cell> squareCol) {
-
-		int end = Sudoku.SQUARE_COLUMNS;
-		int beginFor = -1;
-		for (int i = 0; i < (end - 1); i++) {
-			if (!squareCol.get(i).hasValue()) {
-				beginFor = i;
-			}
-		}
-
-		if (beginFor != -1) {
-			Cell c = squareCol.get(beginFor);
-			List<Integer> poss = c.getPossibilities();
-			for (int j = (beginFor + 1); j < end; j++) {
-				Cell c2 = squareCol.get(beginFor);
-				List<Integer> poss2 = c2.getPossibilities();
-				poss.retainAll(poss2);
-			}
-			return poss;
-		} else
-			return null;
-	}
 }

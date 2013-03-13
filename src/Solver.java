@@ -12,7 +12,7 @@ public class Solver {
 	private Strategy[] strategies = {
 			new OneOfEachStrategy(),
 			//new LockedStrategy(),
-			new HiddenTwinStrategy()
+			//new HiddenTwinStrategy()
 			};
 	
 	public Solver(Sudoku puzzle) {
@@ -88,3 +88,11 @@ public class Solver {
 		return false;
 	}
 }
+
+
+
+
+
+
+
+
