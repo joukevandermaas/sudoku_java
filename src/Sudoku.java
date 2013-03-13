@@ -9,8 +9,8 @@
  */
 
 public class Sudoku {
-	public final static int SUDOKU_SIZE = 6;
-	public final static int SQUARE_ROWS = 2;
+	public final static int SUDOKU_SIZE = 9;
+	public final static int SQUARE_ROWS = 3;
 	public final static int SQUARE_COLUMNS = 3;
 	
 	private CellContainer[] rows = new CellContainer[SUDOKU_SIZE];
