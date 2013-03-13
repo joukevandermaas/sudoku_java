@@ -24,10 +24,10 @@ public class LockedStrategy implements Strategy {
 		// System.out.print("LockedStrategy");
 
 		int columns = Sudoku.SQUARE_COLUMNS;
-		for (int i=1; i<=columns; i++) {
+		for (int i = 1; i <= columns; i++) {
 
 			List<List<Integer>> retainedPossSquare = null;
-			
+
 			for (CellContainer col : puzzle.getColumns()) {
 				List<Cell> squareCol = new ArrayList<Cell>();
 
@@ -39,23 +39,22 @@ public class LockedStrategy implements Strategy {
 
 				retainedPossSquare.add(retainPoss(squareCol));
 			}
-			
-			/*
-			for (int j=0; j<retainedPossSquare.size(); j++) {
-				List<Integer> poss = retainedPossSquare.get(j);
-				if (!poss.isEmpty()) {
-					if (poss.retainAll(retainedPossSquare.get(j+1))) {
-						
-					}
-				}
-			}*/
+
+			// ik snap de warning niet
+			for (int k = 0; k < retainedPossSquare.size(); k++) {
+				List<Integer> cells = removePoss(retainedPossSquare, k);
+				/*
+				 * dit moeten de possible values zijn die in de rest van de
+				 * kolom moeten worden weggestreept
+				 */
+			}
 
 		}
 
 		return changed;
 	}
 
-	// retaines possible values of a column in a square
+	/* retaines possible values of a column in a square */
 	public List<Integer> retainPoss(List<Cell> squareCol) {
 
 		int end = Sudoku.SQUARE_COLUMNS;
@@ -77,5 +76,28 @@ public class LockedStrategy implements Strategy {
 			return poss;
 		} else
 			return null;
+	}
+
+	/*
+	 * returns possible values that are not occurring in other columns in a
+	 * square
+	 */
+	public List<Integer> removePoss(List<List<Integer>> retainedPossSquare,
+			int start) {
+
+		List<Integer> possCompare = retainedPossSquare.get(start);
+
+		for (int j = 0; j < retainedPossSquare.size(); j++) {
+			if (j != start) {
+				List<Integer> poss = retainedPossSquare.get(j);
+				for (int k = 0; k < poss.size(); k++) {
+					if (poss.contains(possCompare.get(k))) {
+						possCompare.remove(possCompare.get(k));
+					}
+				}
+			}
+		}
+
+		return possCompare;
 	}
 }
