@@ -7,6 +7,7 @@ import javax.swing.JApplet;
 public class SudokuApp extends JApplet {
 	private static final long serialVersionUID = 3028028885712932036L;
 	private int cellSize = 50;
+	private int puzzleDim = cellSize * Sudoku.SUDOKU_SIZE;
 	
 	private Sudoku puzzle;
 
@@ -40,15 +41,15 @@ public class SudokuApp extends JApplet {
 		g.setColor(Color.lightGray);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
-		int xoffset = cellSize;
-		int yoffset = cellSize;
+		int xoffset = (this.getWidth() - puzzleDim) / 2;
+		int yoffset = (this.getHeight() - puzzleDim) / 2;
 		
-		drawFrame((Graphics2D)g, new Rectangle(xoffset, yoffset, this.getWidth() - cellSize * 2, this.getHeight() - cellSize * 2));
+		drawFrame((Graphics2D)g, new Point(xoffset, yoffset));
 		
 		for(int i = 0; i < Sudoku.SUDOKU_SIZE; i++) {
 			for(int j = 0; j < Sudoku.SUDOKU_SIZE; j++) {
 				try {
-					drawCell((Graphics2D)g, puzzle.getCell(i, j), new Point(xoffset + cellSize * i, yoffset + cellSize * j));
+					drawCell((Graphics2D)g, puzzle.getCell(i, j), new Point(xoffset + cellSize * j, yoffset + cellSize * i));
 				} catch (SudokuException e) {
 					e.printStackTrace();
 				}
@@ -84,9 +85,9 @@ public class SudokuApp extends JApplet {
 		}
 	}
 
-	private void drawFrame(Graphics2D g, Rectangle size) {
+	private void drawFrame(Graphics2D g, Point p) {
 		g.setColor(Color.white);
-		g.fillRect(size.x, size.y, size.width, size.height);
+		g.fillRect(p.x, p.y, puzzleDim, puzzleDim);
 		
 		for(int i = 0; i <= Sudoku.SUDOKU_SIZE; i++) {
 			if(i % Sudoku.SQUARE_ROWS == 0) {
@@ -96,7 +97,7 @@ public class SudokuApp extends JApplet {
 				g.setColor(Color.darkGray);
 				g.setStroke(new BasicStroke(1));
 			}
-			g.drawLine(size.x, size.y + i * cellSize, size.x + size.width, size.y + i * cellSize);
+			g.drawLine(p.x, p.y + i * cellSize, p.x + puzzleDim, p.y + i * cellSize);
 			
 			if(i % Sudoku.SQUARE_COLUMNS == 0) {
 				g.setStroke(new BasicStroke(2));
@@ -105,7 +106,7 @@ public class SudokuApp extends JApplet {
 				g.setColor(Color.darkGray);
 				g.setStroke(new BasicStroke(1));
 			}
-			g.drawLine(size.x + i * cellSize, size.y, size.x  + i * cellSize, size.y + size.height);
+			g.drawLine(p.x + i * cellSize, p.y, p.x  + i * cellSize, p.y + puzzleDim);
 		}
 		
 	}
