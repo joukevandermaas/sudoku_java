@@ -27,7 +27,7 @@ public class SudokuApp extends JApplet {
 		try {
 			this.puzzle = new Sudoku(puzzle);
 			Solver s = new Solver(this.puzzle);
-			//s.solve();
+			s.solve();
 		} catch (SudokuException e) {
 			e.printStackTrace();
 		}
