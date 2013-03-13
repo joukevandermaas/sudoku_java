@@ -11,8 +11,8 @@ public class Solver {
 	private Sudoku sudoku;
 	private Strategy[] strategies = {
 			new OneOfEachStrategy(),
-			new LockedStrategy(),
-			new HiddenTwinStrategy()
+			//new LockedStrategy(),
+			//new HiddenTwinStrategy()
 			};
 	
 	public Solver(Sudoku puzzle) {

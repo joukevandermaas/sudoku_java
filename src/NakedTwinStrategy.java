@@ -6,6 +6,19 @@ public class NakedTwinStrategy implements Strategy {
 	// possibilities everywhere else.
 	@Override
 	public boolean removePossibilities(Sudoku puzzle) throws SudokuException {
+		boolean result = false;
+		
+		for(CellContainer container : puzzle.getAllContainers()) {
+			if(findNakedTwins(container)) {
+				result = true;
+			}
+		}
+		
+		return result;
+	}
+
+	private boolean findNakedTwins(CellContainer container) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
