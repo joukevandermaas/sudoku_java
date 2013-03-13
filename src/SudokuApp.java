@@ -9,7 +9,7 @@ public class SudokuApp extends JApplet {
 	private int cellSize = 50;
 	private int puzzleDim = cellSize * Sudoku.SUDOKU_SIZE;
 	
-	private Sudoku sudoku;
+	private Sudoku puzzle;
 
 	@Override
 	public void init() {
@@ -24,19 +24,12 @@ public class SudokuApp extends JApplet {
 		}
 		
 		int[][] puzzle = l.getNext();
-		while(puzzle != null) {
-			try {
-				this.sudoku = new Sudoku(puzzle);
-				Solver s = new Solver(this.sudoku);
-				s.solve();
-				if(this.sudoku.isSolved())
-					puzzle = l.getNext();
-				else
-					puzzle = null;
-					
-			} catch (SudokuException e) {
-				e.printStackTrace();
-			}
+		try {
+			this.puzzle = new Sudoku(puzzle);
+			Solver s = new Solver(this.puzzle);
+			s.solve();
+		} catch (SudokuException e) {
+			e.printStackTrace();
 		}
 		
 	}
@@ -56,7 +49,7 @@ public class SudokuApp extends JApplet {
 		for(int i = 0; i < Sudoku.SUDOKU_SIZE; i++) {
 			for(int j = 0; j < Sudoku.SUDOKU_SIZE; j++) {
 				try {
-					drawCell((Graphics2D)g, sudoku.getCell(i, j), new Point(xoffset + cellSize * j, yoffset + cellSize * i));
+					drawCell((Graphics2D)g, puzzle.getCell(i, j), new Point(xoffset + cellSize * j, yoffset + cellSize * i));
 				} catch (SudokuException e) {
 					e.printStackTrace();
 				}
