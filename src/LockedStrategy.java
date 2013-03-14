@@ -38,15 +38,21 @@ public class LockedStrategy implements Strategy {
 				}
 
 				retainedPossSquare.add(retainPoss(squareCol));
-			}
 
-			// ik snap de warning niet
-			for (int k = 0; k < retainedPossSquare.size(); k++) {
-				List<Integer> cells = removePoss(retainedPossSquare, k);
-				/*
-				 * dit moeten de possible values zijn die in de rest van de
-				 * kolom moeten worden weggestreept
-				 */
+				// ik snap de warning niet
+				for (int k = 0; k < retainedPossSquare.size(); k++) {
+					List<Integer> cells = removePoss(retainedPossSquare, k);
+					/*
+					 * dit moeten de possible values zijn die in de rest van de
+					 * kolom moeten worden weggestreept
+					 */
+					for (Cell c : col.getCells()) {
+						for (int l = 0; l < columns * 3; l++)
+							if (!((l >= range - columns) && (l <= range))) {
+								col.getCells()[l].removeAllPossibilities(cells);
+							}
+					}
+				}
 			}
 
 		}
