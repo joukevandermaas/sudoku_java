@@ -14,8 +14,8 @@ public class Solver {
 	private Strategy[] strategies = {
 			new OneOfEachStrategy(),
 			//new LockedStrategy(),
-			//new NakedTwinStrategy(),
-			//new HiddenTwinStrategy()
+			new NakedTwinStrategy(),
+			new HiddenTwinStrategy()
 			};
 	
 	public Solver(Sudoku puzzle) {
