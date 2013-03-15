@@ -19,11 +19,6 @@
 import java.util.ArrayList;
 import java.util.List;
 
-/* 
- * if there are 2 or 3 possibilities on a column that are the same and don't occur
- * in another place in the square then remove those possibilities on every
- * other place on the same column
- */
 public class LockedStrategy implements Strategy {
 
 	@Override
