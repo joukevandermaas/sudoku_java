@@ -20,61 +20,42 @@ public class LockedStrategy implements Strategy {
 
 	@Override
 	public boolean removePossibilities(Sudoku puzzle) throws SudokuException {
-		boolean changed = false;
-		// System.out.print("LockedStrategy");
 
 		int columns = Sudoku.SQUARE_COLUMNS;
-		for (int i = 1; i <= columns; i++) { // 3, 6 of 9
+		for (int i = 1; i <= columns; i++) { // determines row (0-2, 3-5 or 6-8)
 
 			int range = columns * i;
-			List<List<Integer>> retainedPossSquare = new ArrayList<List<Integer>>();
 
-			// for (CellContainer col : puzzle.getColumns()) {
-			for (int k = range - columns; k < range; k++) {
-				CellContainer col = puzzle.getColumns()[k];
-				List<Cell> squareCol = new ArrayList<Cell>();
+			for (int j = 1; j <= columns; j++) { // determines col (0-2, 3-5 or
+													// 6-8)
+				int range2 = columns * j;
+				List<List<Integer>> retainedPossSquare = new ArrayList<List<Integer>>();
 
-				for (int j = range - columns; j < range; j++) {
-					Cell c = col.getCells()[j];
-					squareCol.add(c);
-				}
-				// corresponding possibilities for every column in a square
-				retainedPossSquare.add(retainPoss(squareCol));
-			}
+				for (int k = range - columns; k < range; k++) { // 3 rows
 
-			System.out.print("size: "+retainedPossSquare.size());
-
-			for (int k = 0; k < retainedPossSquare.size(); k++) {
-				List<Integer> cells = removePoss(retainedPossSquare, k);
-				/*
-				 * dit moeten de possible values zijn die in de rest van de
-				 * kolom moeten worden weggestreept
-				 */
-
-				for (CellContainer col : puzzle.getColumns()) {
 					List<Cell> squareCol = new ArrayList<Cell>();
 
-					for (int j = range - columns; j < range; j++) {
-						Cell c = col.getCells()[j];
+					for (int l = range2 - columns; l < range2; l++) { // 3 cols
+						Cell c = puzzle.getColumns()[l].getCells()[k];
+						squareCol.add(c);
 					}
-
+					// corresponding possibilities for every column in a square
+					retainedPossSquare.add(retainPoss(squareCol));
+				}
+				System.out.print("size: " + retainedPossSquare.size());
+				// moet max 3 zijn
+				for (int k = 0; k < retainedPossSquare.size(); k++) {
+					List<Integer> cells = removeOccPoss(retainedPossSquare, k);
 					if (cells != null) {
-						for (Cell c : col.getCells()) {
-							for (int l = 0; l < columns * 3; l++)
-								if (!((l >= range - columns) && (l <= range) || c
-										.hasValue())) {
-									col.getCells()[l]
-											.removeAllPossibilities(cells);
-									changed = true;
-								}
-						}
+						CellContainer col = puzzle.getColumns()[i];
+						if (removePoss(cells, col, i))
+							return true;
 					}
 				}
 			}
-
 		}
 
-		return changed;
+		return false;
 	}
 
 	/* retains corresponding possibilities of a column in a square */
@@ -102,10 +83,10 @@ public class LockedStrategy implements Strategy {
 	}
 
 	/*
-	 * returns possible values that are not occurring in other columns in a
-	 * square
+	 * input is a list of possible value lists in a square, returns possible
+	 * values that are not occurring in other columns in a square
 	 */
-	public List<Integer> removePoss(List<List<Integer>> retainedPossSquare,
+	public List<Integer> removeOccPoss(List<List<Integer>> retainedPossSquare,
 			int start) {
 
 		List<Integer> possCompare = retainedPossSquare.get(start);
@@ -124,4 +105,26 @@ public class LockedStrategy implements Strategy {
 
 		return possCompare;
 	}
+
+	/*
+	 * input is a column in a square consisting of possibilities that has to be
+	 * removed in the rest of the column
+	 */
+	public boolean removePoss(List<Integer> cells, CellContainer col, int range)
+			throws SudokuException {
+		boolean changed = false;
+		int columns = Sudoku.SQUARE_COLUMNS;
+
+		for (int l = 0; l < columns * 3; l++) {
+			// if it is in the colSquare range or it has a value, skip
+			if (!((l >= range - columns) && (l <= range) || col.getCells()[l]
+					.hasValue())) {
+				col.getCells()[l].removeAllPossibilities(cells);
+				changed = true;
+			}
+		}
+
+		return changed;
+	}
+
 }
