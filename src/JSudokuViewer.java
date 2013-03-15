@@ -1,3 +1,18 @@
+/*
+ * JSudokuViewer.java
+ * Component that draws a specific sudoku.
+ * 
+ * Version information
+ * v0.2 (alpha 1)
+ *
+ * Date
+ * 15/03/2013
+ * 
+ * Author
+ * Jouke van der Maas & Koen Keune
+ * 
+ */
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
