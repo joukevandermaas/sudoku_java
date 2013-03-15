@@ -1,3 +1,5 @@
+import java.util.*;
+
 /*
  * Solver.java
  * 
@@ -12,6 +14,7 @@ public class Solver {
 	private Strategy[] strategies = {
 			new OneOfEachStrategy(),
 			//new LockedStrategy(),
+			new NakedTwinStrategy(),
 			new HiddenTwinStrategy()
 			};
 	
@@ -46,8 +49,8 @@ public class Solver {
 				continue;
 			// skip a container if needed
 			if(!enterSingle(c)) {
-				if (!enterHiddenSingle(c));
-					continue;
+				if (enterHiddenSingle(c))
+					return true;
 			}
 			else
 				return true;
@@ -66,23 +69,23 @@ public class Solver {
 	}
 	
 	private boolean enterHiddenSingle(CellContainer container) throws SudokuException {
-		int[] values = new int[Sudoku.SUDOKU_SIZE];
-		Cell hiddenSingle = null;
-		int hiddenSingleValue = 0;
+		List<ArrayList<Cell>> values = new ArrayList<ArrayList<Cell>>();
 		
-		for(Cell c : container.getCells()) {
-			if(!c.hasValue()) {
-				for(int i : c.getPossibilities()) {
-					values[i-1] += 1;
-					if(values[i-1] == 1) {
-						hiddenSingle = c;
-						hiddenSingleValue = i;
-					}
-				}
+		for(int i = 1; i <= Sudoku.SUDOKU_SIZE; i++) {
+			values.add(new ArrayList<Cell>());
+			
+			for(Cell c : container.getCells()) {
+				if(!c.hasValue() && c.getPossibilities().contains(i))
+					values.get(i-1).add(c);	
 			}
 		}
-		if(hiddenSingle.getPossibilities().size() == 1) {
-			hiddenSingle.setValue(hiddenSingleValue);
+		
+		for(int i = 1; i < Sudoku.SUDOKU_SIZE; i++) {
+			List<Cell> l = values.get(i-1);
+			if(l.size() == 1) {
+				l.get(0).setValue(i);
+				return true;
+			}
 		}
 		
 		return false;

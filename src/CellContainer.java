@@ -9,6 +9,7 @@
  */
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -26,8 +27,9 @@ public class CellContainer {
 		List<Integer> values = new ArrayList<Integer>();
 
 		for (Cell c : cells) {
-			if(c.hasValue())
+			if(c.hasValue()) {
 				values.add(c.getValue());
+			}
 		}
 		
 		return values;
@@ -38,6 +40,10 @@ public class CellContainer {
 	
 	public boolean isSolved() throws SudokuException {
 		return getValues().size() == cells.length;
+	}
+	
+	public String toString() { 
+		return Arrays.toString(cells);
 	}
 	
 }
