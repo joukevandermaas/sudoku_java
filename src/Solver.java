@@ -2,12 +2,17 @@ import java.util.*;
 
 /*
  * Solver.java
+ * This class attempts to solve a sudoku puzzle using various Strategy-implementations.
  * 
  * Version information
+ * v0.2 (alpha 1)
  *
  * Date
+ * 15/03/2013
  * 
- * Copyright notice
+ * Author
+ * Jouke van der Maas & Koen Keune
+ * 
  */
 public class Solver {
 	private Sudoku sudoku;
@@ -22,6 +27,9 @@ public class Solver {
 		this.sudoku = puzzle;
 	}
 	
+	// Solves the sudoku. Returns when the sudoku is solved,
+	// or when no more steps could be taken (ie. the sudoku is
+	// invalid or it was too hard).
 	public void solve() throws SudokuException {
 		boolean madeProgress = true;
 		
@@ -38,11 +46,14 @@ public class Solver {
 		}
 	}
 
+	// returns the sudoku this Solver is solving
 	public Sudoku getSudoku() {
 		return sudoku;
 	}
 	
-	// if there is one possibility left then that will be the value
+	// Enters only one value, because possibilities change whenever a
+	// number is entered. The possibilities should be updated before more numbers
+	// are entered.
 	private boolean enterValue() throws SudokuException {
 		for(CellContainer c : sudoku.getAllContainers()) {
 			if(c.isSolved())
@@ -58,6 +69,7 @@ public class Solver {
 		return false;
 	}
 	
+	// if there is one possibility left then that will be the value
 	private boolean enterSingle(CellContainer container) throws SudokuException {
 		for(Cell c : container.getCells()) {
 			if(!c.hasValue() && c.getPossibilities().size() == 1) {
@@ -68,6 +80,7 @@ public class Solver {
 		return false;
 	}
 	
+	// if a possible value can go in only one spot then that will be the value
 	private boolean enterHiddenSingle(CellContainer container) throws SudokuException {
 		List<ArrayList<Cell>> values = new ArrayList<ArrayList<Cell>>();
 		

@@ -1,11 +1,17 @@
 /*
- * SudokuReadException.java
+ * SudokuReaderException.java
+ * This exception should be thrown when there is an error
+ * loading a sudoku from a file or network. 
  * 
  * Version information
+ * v0.2 (alpha 1)
  *
  * Date
+ * 15/03/2013
  * 
- * Copyright notice
+ * Author
+ * Jouke van der Maas & Koen Keune
+ * 
  */
 
 public class SudokuReaderException extends Exception{
