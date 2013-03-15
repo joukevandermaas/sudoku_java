@@ -1,14 +1,15 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import javax.swing.*;
 
-import javax.swing.JApplet;
 
-
-public class SudokuApp extends JApplet {
+public class SudokuApp extends JApplet implements ActionListener {
 	private static final long serialVersionUID = 3028028885712932036L;
 	private int cellSize = 50;
-	private int puzzleDim = cellSize * Sudoku.SUDOKU_SIZE;
-	
+	private ButtonGroup numberGroup;
+	private JSudokuViewer viewer;
 	private Sudoku puzzle;
 
 	@Override
@@ -16,6 +17,31 @@ public class SudokuApp extends JApplet {
 		super.init();
 		this.setSize((Sudoku.SUDOKU_SIZE + 2) * cellSize, (Sudoku.SUDOKU_SIZE + 2) * cellSize);
 		
+		setLayout(null);
+		loadSudoku();
+		
+		this.setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
+        viewer = new JSudokuViewer(puzzle);
+        viewer.setAlignmentX(Component.CENTER_ALIGNMENT);
+        viewer.setAlignmentY(Component.CENTER_ALIGNMENT);
+               
+        add(Box.createRigidArea(new Dimension(30, 30)));
+        add(viewer);
+        
+        JPanel buttons = new JPanel();
+        buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
+        
+        numberGroup = new ButtonGroup();
+        for(int i = 1; i <= Sudoku.SUDOKU_SIZE; i++) {
+        	JToggleButton b = new JToggleButton(Integer.toString(i));
+        	numberGroup.add(b);
+        	b.addActionListener(this);
+        	buttons.add(b);
+        }
+        add(buttons);
+    }
+	
+	private void loadSudoku() {
 		Loader l = null;
 		try {
 			l = Loader.fromFile("../sudokus.txt");
@@ -31,85 +57,21 @@ public class SudokuApp extends JApplet {
 		} catch (SudokuException e) {
 			e.printStackTrace();
 		}
-		
-	}
-	
-	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
-		
-		g.setColor(Color.lightGray);
-		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		
-		int xoffset = (this.getWidth() - puzzleDim) / 2;
-		int yoffset = (this.getHeight() - puzzleDim) / 2;
-		
-		drawFrame((Graphics2D)g, new Point(xoffset, yoffset));
-		
-		for(int i = 0; i < Sudoku.SUDOKU_SIZE; i++) {
-			for(int j = 0; j < Sudoku.SUDOKU_SIZE; j++) {
-				try {
-					drawCell((Graphics2D)g, puzzle.getCell(i, j), new Point(xoffset + cellSize * j, yoffset + cellSize * i));
-				} catch (SudokuException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
-	private void drawCell(Graphics2D g, Cell c, Point p) throws SudokuException {		
-		if(c.hasValue()) {
-			String value = Integer.toHexString(c.getValue());
-			Font f = new Font(g.getFont().getFontName(), 0, 36);
-			
-			g.setColor(Color.black);
-			g.setFont(f);
-			g.drawString(value, p.x + cellSize / 2 - cellSize/4, p.y + cellSize - cellSize/4);
-		} else {
-			Font f = new Font(g.getFont().getFontName(), 0, 10);
-			
-			g.setColor(Color.darkGray);
-			g.setFont(f);
-			int rowSize = cellSize/Sudoku.SQUARE_COLUMNS;
-			int colSize = cellSize/Sudoku.SQUARE_ROWS;
-			for(int i : c.getPossibilities()) {
-				String value = Integer.toHexString(i);
-				int row = (i-1) / Sudoku.SQUARE_COLUMNS;
-				int col = (i-1) % Sudoku.SQUARE_COLUMNS;
-				int xpos = p.x + col * rowSize;
-				int ypos = p.y + row * colSize;
-				
-				g.drawString(value, xpos + colSize/2 - colSize/4, ypos + rowSize - rowSize/4);
-				//g.drawRect(xpos, ypos, rowSize, colSize);
-			}
-		}
 	}
 
-	private void drawFrame(Graphics2D g, Point p) {
-		g.setColor(Color.white);
-		g.fillRect(p.x, p.y, puzzleDim, puzzleDim);
-		
-		for(int i = 0; i <= Sudoku.SUDOKU_SIZE; i++) {
-			if(i % Sudoku.SQUARE_ROWS == 0) {
-				g.setStroke(new BasicStroke(2));
-				g.setColor(Color.black);
-			} else {
-				g.setColor(Color.darkGray);
-				g.setStroke(new BasicStroke(1));
-			}
-			g.drawLine(p.x, p.y + i * cellSize, p.x + puzzleDim, p.y + i * cellSize);
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() instanceof JToggleButton) {
+			JToggleButton b = (JToggleButton) e.getSource();
+			int value = Integer.parseInt(b.getText());
 			
-			if(i % Sudoku.SQUARE_COLUMNS == 0) {
-				g.setStroke(new BasicStroke(2));
-				g.setColor(Color.black);
-			} else {
-				g.setColor(Color.darkGray);
-				g.setStroke(new BasicStroke(1));
+			if(b.isSelected()) {
+				viewer.setSpecial(value);
 			}
-			g.drawLine(p.x + i * cellSize, p.y, p.x  + i * cellSize, p.y + puzzleDim);
 		}
-		
 	}
+	
+	
 	
 }
 
