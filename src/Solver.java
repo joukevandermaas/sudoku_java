@@ -49,8 +49,10 @@ public class Solver {
 				continue;
 			// skip a container if needed
 			if(!enterSingle(c)) {
-				if (!enterHiddenSingle(c));
+				if (!enterHiddenSingle(c))
 					continue;
+				else
+					return true;
 			}
 			else
 				return true;

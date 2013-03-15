@@ -19,8 +19,8 @@ public class OneOfEachStrategy implements Strategy {
 		for(CellContainer container : puzzle.getAllContainers()) {
 			List<Integer> values = container.getValues();
 			for(Cell c : container.getCells()) {
-				if(!c.hasValue()) {
-					changed = c.removeAllPossibilities(values);
+				if(!c.hasValue() && c.removeAllPossibilities(values)) {
+					changed = true;
 				}
 			}
 		}

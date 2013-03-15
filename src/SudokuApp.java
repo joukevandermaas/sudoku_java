@@ -2,6 +2,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
+
 import javax.swing.*;
 
 
@@ -49,11 +51,24 @@ public class SudokuApp extends JApplet implements ActionListener {
 			e1.printStackTrace();
 		}
 		
-		int[][] puzzle = l.getNext();
+		int[][] loadedSudoku = l.getNext();
 		try {
-			this.puzzle = new Sudoku(puzzle);
-			Solver s = new Solver(this.puzzle);
-			s.solve();
+			Solver s;
+			while(loadedSudoku != null) {
+				puzzle = new Sudoku(loadedSudoku);
+				s = new Solver(this.puzzle);
+				s.solve();
+				
+				if(puzzle.isSolved()) {
+					loadedSudoku = l.getNext();
+				}
+				else {
+					for(int i = 0; i < 9; i++)
+					System.out.println(Arrays.toString(loadedSudoku[i]));
+					break;
+				}
+			}
+			
 		} catch (SudokuException e) {
 			e.printStackTrace();
 		}
