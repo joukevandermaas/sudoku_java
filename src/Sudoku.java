@@ -1,11 +1,17 @@
 /*
  * Sudoku.java
+ * Representation of a sudoku puzzle. The represented sudoku is
+ * not necessarily valid or correct (it is not verified).
  * 
  * Version information
+ * v0.2 (alpha 1)
  *
  * Date
+ * 15/03/2013
  * 
- * Copyright notice
+ * Author
+ * Jouke van der Maas & Koen Keune
+ * 
  */
 
 public class Sudoku {
@@ -61,6 +67,9 @@ public class Sudoku {
 	public CellContainer[] getSquares() {
 		return squares;
 	}
+	
+	// Returns a combination of rows, columns and squares. There
+	// is overlap between the cells in these CellContainers
 	public CellContainer[] getAllContainers() {
 		return all;
 	}
