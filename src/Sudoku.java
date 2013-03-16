@@ -50,7 +50,7 @@ public class Sudoku {
 		for(int i = 0; i < SUDOKU_SIZE; i++) {
 			this.rows[i] = new CellContainer(rows[i]);
 			this.columns[i] = new CellContainer(columns[i]);
-			this.squares[i] = new CellContainer(squares[i]);
+			this.squares[i] = new SquareCellContainer(squares[i]);
 		}
 		System.arraycopy(this.rows, 0, all, 0, SUDOKU_SIZE);
 		System.arraycopy(this.columns, 0, all, SUDOKU_SIZE, SUDOKU_SIZE);
