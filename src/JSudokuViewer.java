@@ -30,6 +30,7 @@ public class JSudokuViewer extends JComponent {
 	private int cellSize = 50;
 	private int puzzleDim = cellSize * Sudoku.SUDOKU_SIZE;
 	private int special = -1;
+	private Color highlight = Color.red;
 	
 	public JSudokuViewer(Sudoku puzzle) {
 		this.puzzle = puzzle;
@@ -85,7 +86,7 @@ public class JSudokuViewer extends JComponent {
 			Font f = new Font(g.getFont().getFontName(), 0, 36);
 			
 			if(c.getValue() == special)
-				g.setColor(Color.blue);
+				g.setColor(highlight);
 			else
 				g.setColor(Color.black);
 			
@@ -105,7 +106,7 @@ public class JSudokuViewer extends JComponent {
 				int ypos = p.y + row * colSize;
 				
 				if(i == special)
-					g.setColor(Color.blue);
+					g.setColor(highlight);
 				else
 					g.setColor(Color.black);
 				
