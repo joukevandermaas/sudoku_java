@@ -45,6 +45,7 @@ public class CellContainer {
 		return cells;
 	}
 
+	
 	public boolean isSolved() throws SudokuException {
 		return getValues().size() == cells.length;
 	}

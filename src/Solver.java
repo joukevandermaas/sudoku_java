@@ -18,7 +18,7 @@ public class Solver {
 	private Sudoku sudoku;
 	private Strategy[] strategies = {
 			new OneOfEachStrategy(),
-			//new LockedStrategy(),
+			new LockedStrategy(),
 			new NakedTwinStrategy(),
 			new HiddenTwinStrategy()
 			};
