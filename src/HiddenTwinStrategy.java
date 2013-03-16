@@ -23,7 +23,7 @@ public class HiddenTwinStrategy implements Strategy {
 	@Override
 	public boolean removePossibilities(Sudoku puzzle) throws SudokuException {
 		boolean result = false;
-
+		
 		for (CellContainer c : puzzle.getAllContainers()) {
 			if (findHiddenTwins(c))
 				result = true;
@@ -42,15 +42,15 @@ public class HiddenTwinStrategy implements Strategy {
 		boolean result = false;
 
 		for (int i : cells.keySet()) {
-			done.add(i);
 			List<Cell> possibleCells = cells.get(i);
+			done.add(i);
 			for (int j : cells.keySet()) {
-				if (done.contains(i))
+				if (done.contains(j))
 					continue;
 				List<Cell> otherCells = cells.get(j);
 				if (possibleCells.containsAll(otherCells)) {
-					removeOtherPossibilities(possibleCells, i, j);
-					result = true;
+					if(removeOtherPossibilities(possibleCells, i, j))
+						result = true;
 				}
 			}
 		}
@@ -59,15 +59,20 @@ public class HiddenTwinStrategy implements Strategy {
 
 	}
 
-	private void removeOtherPossibilities(List<Cell> possibleCells, int n1,
+	private boolean removeOtherPossibilities(List<Cell> possibleCells, int n1,
 			int n2) throws SudokuException {
+		boolean result = false;
+		
 		for (Cell c : possibleCells) {
 			for (int i = 1; i <= Sudoku.SUDOKU_SIZE; i++) {
 				if (i != n1 && i != n2) {
-					c.removePossibility(i);
+					if(c.removePossibility(i))
+						result = true;
 				}
 			}
 		}
+		
+		return result;
 	}
 
 	private Hashtable<Integer, List<Cell>> getPossibilityMap(

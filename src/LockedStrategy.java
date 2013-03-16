@@ -29,9 +29,6 @@ public class LockedStrategy implements Strategy {
 			SquareCellContainer square = (SquareCellContainer) squares[i];
 			
 			for(int n = 1; n <= Sudoku.SUDOKU_SIZE; n++) {
-				if(n == 8 && i == 7)
-					System.out.println("now!");
-				
 				List<Integer> rows = square.findActivatedRows(n);
 				List<Integer> cols = square.findActivatedColumns(n);
 				
