@@ -19,6 +19,7 @@ public class Solver {
 	private Strategy[] strategies = {
 			new OneOfEachStrategy(),
 			new LockedStrategy(),
+			new DoubleLockedStrategy(),
 			new NakedTwinStrategy(),
 			new HiddenTwinStrategy()
 			};
