@@ -29,7 +29,7 @@ public class DoubleLockedStrategy extends LockedStrategy {
 				List<Integer> cols = square.findActivatedColumns(n);
 				if (rows.size() == 2) {
 					int startCol2 = findNextRowSquare(i, n, rows, squares);
-					if (startCol2 != -1) {
+					if (startCol2 != -1) { // if there is a match
 						int startCol = getRealCol(i, 0);
 						for (int j = 0; j < 2; j++) {
 							Cell[] row = puzzle.getRows()[getRealRow(i,
