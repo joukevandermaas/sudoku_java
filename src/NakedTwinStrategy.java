@@ -8,7 +8,7 @@ public class NakedTwinStrategy implements Strategy {
 	// When two cells have exactly two the same possibilities, remove those as
 	// possibilities everywhere else.
 	@Override
-	public boolean removePossibilities(Sudoku puzzle) throws SudokuException {
+	public boolean removePossibilities(Sudoku puzzle) throws SudokuException, InvalidSudokuException {
 		boolean result = false;
 
 		for(CellContainer container : puzzle.getAllContainers()) {
@@ -20,7 +20,7 @@ public class NakedTwinStrategy implements Strategy {
 		return result;
 	}
 
-	private boolean findNakedTwins(CellContainer container) throws SudokuException {
+	private boolean findNakedTwins(CellContainer container) throws SudokuException, InvalidSudokuException {
 		List<Cell> cells = findDoublePossibilityCells(container);
 		if(cells.size() < 2)
 			return false;
@@ -41,7 +41,7 @@ public class NakedTwinStrategy implements Strategy {
 		return false;
 	}
 
-	private boolean removeFromOthers(CellContainer container, Cell c1, Cell c2) throws SudokuException {
+	private boolean removeFromOthers(CellContainer container, Cell c1, Cell c2) throws SudokuException, InvalidSudokuException {
 		boolean result = false;
 		for (Cell c : container.getCells()) {
 			if(!c.hasValue() && !c.equals(c1) && !c.equals(c2)) {

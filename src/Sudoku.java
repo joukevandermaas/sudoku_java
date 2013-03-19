@@ -37,9 +37,9 @@ public class Sudoku {
 				Cell cell;
 				
 				if(value == 0)
-					cell = new Cell();
+					cell = new Cell(row, col, square);
 				else
-					cell = new Cell(value);
+					cell = new Cell(row, col, square, value);
 				
 				rows[row][col] = cell;
 				columns[col][row] = cell;

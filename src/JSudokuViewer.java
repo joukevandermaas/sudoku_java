@@ -105,13 +105,13 @@ public class JSudokuViewer extends JComponent {
 				int xpos = p.x + col * rowSize;
 				int ypos = p.y + row * colSize;
 				
-				if(i == special)
+				if(i == special) {
 					g.setColor(highlight);
-				else
-					g.setColor(Color.black);
+					g.drawRect(xpos, ypos, rowSize, colSize);
+				}
+				g.setColor(Color.black);
 				
 				g.drawString(value, xpos + colSize/2 - colSize/4, ypos + rowSize - rowSize/4);
-				//g.drawRect(xpos, ypos, rowSize, colSize);
 			}
 		}
 	}

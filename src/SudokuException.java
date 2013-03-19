@@ -1,6 +1,6 @@
 /*
  * SudokuException.java
- * This exception should be thrown for any sudoku related errors.
+ * This exception should be thrown when an invalid operation is attempted on a Sudoku object.
  * 
  * Version information
  * v0.2 (alpha 1)

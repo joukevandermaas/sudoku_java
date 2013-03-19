@@ -17,5 +17,5 @@
 public interface Strategy {
 	// Removes one or more possible values from the cells in puzzle.
 	// Returns true if possibilities were removed, false otherwise.
-	boolean removePossibilities(Sudoku puzzle) throws SudokuException;
+	boolean removePossibilities(Sudoku puzzle) throws SudokuException, InvalidSudokuException;
 }

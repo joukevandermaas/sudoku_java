@@ -21,7 +21,7 @@ import java.util.List;
 public class LockedStrategy implements Strategy {
 
 	@Override
-	public boolean removePossibilities(Sudoku puzzle) throws SudokuException {
+	public boolean removePossibilities(Sudoku puzzle) throws SudokuException, InvalidSudokuException {
 		CellContainer[] squares = puzzle.getSquares();
 		boolean result = false;
 		
@@ -51,7 +51,7 @@ public class LockedStrategy implements Strategy {
 		return result;
 	}
 	
-	private boolean removePossibilities(Cell[] cells, int value, int lowerBound, int upperBound) throws SudokuException {
+	private boolean removePossibilities(Cell[] cells, int value, int lowerBound, int upperBound) throws SudokuException, InvalidSudokuException {
 		boolean result = false;
 		for(int i = 0; i < Sudoku.SUDOKU_SIZE; i++) {
 			if(i < lowerBound || i >= upperBound) {

@@ -29,6 +29,7 @@ public class SudokuApp extends JApplet implements ActionListener {
 	private ButtonGroup numberGroup;
 	private JSudokuViewer viewer;
 	private Sudoku puzzle;
+	private Solver solver;
 
 	// sets up the main frame, loads/solves the puzzles
 	@Override
@@ -57,6 +58,7 @@ public class SudokuApp extends JApplet implements ActionListener {
         	b.addActionListener(this);
         	buttons.add(b);
         }
+
         add(buttons);
     }
 	
@@ -72,11 +74,14 @@ public class SudokuApp extends JApplet implements ActionListener {
 		
 		int[][] loadedSudoku = l.getNext();
 		try {
-			Solver s;
 			while(loadedSudoku != null) {
 				puzzle = new Sudoku(loadedSudoku);
-				s = new Solver(this.puzzle);
-				s.solve();
+				solver = new Solver(this.puzzle);
+				try {
+					solver.solve();
+				} catch (InvalidSudokuException e) {
+					System.err.println("Invalid sudoku");
+				}
 				
 				if(puzzle.isSolved()) {
 					loadedSudoku = l.getNext();
