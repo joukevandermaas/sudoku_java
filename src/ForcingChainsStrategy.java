@@ -3,7 +3,9 @@ import java.util.List;
 
 
 public class ForcingChainsStrategy implements Strategy {
-	private static final int maxLevel = 1;
+	// Don't allow too many levels of recursion or the solver
+	// will get very slow.
+	private static final int maxLevel = 3;
 	private static int currentLevel = 0;
 	
 	@Override
@@ -13,14 +15,20 @@ public class ForcingChainsStrategy implements Strategy {
 		}
 		currentLevel++;
 		
-		boolean result = false;
-		
+		// Only do doubles (cells with two possibilities) to avoid having too many chains.
+		// Again, this strategy has a very high complexity so
+		// everything should be done to make it cheaper.
 		List<Cell> doubles = findDoublePossibilities(puzzle);
 		int[][] copy = puzzle.toIntArray();
 		
 		for(Cell c : doubles) {
+			// see if there's a cell that always takes the same value,
+			// regardless of what is entered in c.
 			Cell chainResult = finishChain(copy, c);
+			
 			if(chainResult != null) {
+				// This guarantees that a new value can be entered, so
+				// we should stop (to avoid doing more than necessary).
 				Cell chainResultEquiv = puzzle.getCell(chainResult.getRow(), chainResult.getColumn());
 				currentLevel--;
 				return chainResultEquiv.removeOtherPossibilities(chainResult.getValue());
@@ -28,7 +36,7 @@ public class ForcingChainsStrategy implements Strategy {
 		}
 		
 		currentLevel--;
-		return result;
+		return false;
 	}
 
 	private Cell finishChain(int[][] copy, Cell c) throws SudokuException, InvalidSudokuException {
@@ -37,11 +45,18 @@ public class ForcingChainsStrategy implements Strategy {
 		Solver solver1 = new Solver(pos1);
 		Solver solver2 = new Solver(pos2);
 		
+		// Try to solve the puzzle with both values.
+		// note: one of these will be the correct value no matter what,
+		// but we're not brute-forcing (i.e. throwing the other, wrong, 
+		// possibility away), just looking if there is overlap somewhere.
 		int val1 = c.getPossibilities().get(0);
 		int val2 = c.getPossibilities().get(1);
 		pos1.getCell(c.getRow(), c.getColumn()).setValue(val1);
 		pos2.getCell(c.getRow(), c.getColumn()).setValue(val2);
 		
+		// One of these will likely throw (depending on the complexity of the
+		// puzzle and the value of maxLevel), but never both (unless the puzzle
+		// is in fact invalid).
 		try {
 			solver1.solve();
 		} catch (InvalidSudokuException e) {
@@ -60,6 +75,8 @@ public class ForcingChainsStrategy implements Strategy {
 				Cell c1 = pos1.getCell(row, col);
 				Cell c2 = pos2.getCell(row, col);
 				
+				// The certain value is only useful if it did not have a value
+				// in the original puzzle.
 				if(copy[row][col] == 0 && c1.hasValue() && c2.hasValue() && c1.getValue() == c2.getValue())
 					return c1;
 			}

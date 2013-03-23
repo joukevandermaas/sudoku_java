@@ -34,19 +34,24 @@ public class Solver {
 	public void solve() throws SudokuException, InvalidSudokuException {
 		boolean madeProgress = true;
 		
+		// strategies[0] fixes special case and ensures no wrong number will
+		// be entered in a CellContainer with only one empty cell at the start.
+		strategies[0].removePossibilities(sudoku);
+		
 		while(madeProgress && !sudoku.isSolved()) {
 			madeProgress = false;
-
+			
 			if (enterValue())
 				madeProgress = true;
 			
 			for(Strategy strat : strategies) {
-				if (strat.removePossibilities(sudoku)) {
+				// Only use more advanced strategies when the most simple 
+				// one fails and no more numbers can be entered directly.
+				if (strat.removePossibilities(sudoku) || madeProgress) {
 					madeProgress = true;
 					break;
 				}
 			}
-			return;
 		}
 	}
 
