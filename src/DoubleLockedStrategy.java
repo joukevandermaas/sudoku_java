@@ -108,7 +108,7 @@ public class DoubleLockedStrategy extends LockedStrategy {
 		int squaresPerCol = Sudoku.SUDOKU_SIZE / Sudoku.SQUARE_ROWS;
 		int squareCol = squareNum % squaresPerCol;
 		int j = 1;
-		int squareColNext = (squareNum + j) / squaresPerCol;
+		int squareColNext = (squareNum + j) % squaresPerCol;
 
 		SquareCellContainer square2 = null;
 
