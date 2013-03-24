@@ -62,14 +62,14 @@ public class LockedStrategy implements Strategy {
 		return result;
 	}
 
-	private int getRealCol(int square, int colInSquare) throws SudokuException {
+	protected int getRealCol(int square, int colInSquare) throws SudokuException {
 		int squaresPerRow = Sudoku.SUDOKU_SIZE / Sudoku.SQUARE_COLUMNS; // always an int
 		int col = (square % squaresPerRow) * Sudoku.SQUARE_COLUMNS + colInSquare;
 
 		return col;
 	}
 
-	private int getRealRow(int square, int rowInSquare) throws SudokuException {
+	protected int getRealRow(int square, int rowInSquare) throws SudokuException {
 		int squaresPerRow = Sudoku.SUDOKU_SIZE / Sudoku.SQUARE_COLUMNS;
 		int row = (square / squaresPerRow) * Sudoku.SQUARE_ROWS + rowInSquare;
 		
