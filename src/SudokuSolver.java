@@ -1,4 +1,5 @@
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.swing.*;
 
@@ -36,42 +37,57 @@ public class SudokuSolver {
 		try {
 			loader = Loader.fromFile(filename);
 		} catch(FileNotFoundException e) {
-			System.out.println("File not found.");
-			System.exit(1);
+			errorExit("File not found.");
 		}
 		System.out.println("Starting batchmode on file " + filename + "\nThis might take a while.\n");
 		
 		int solved = 0;
 		int puzzles = 0;
 		int invalid = 0;
-		int[][] puzzle = loader.getNext();
-		long end;
-		long start = System.currentTimeMillis();
-		
-		while (puzzle != null) {
-			puzzles++;
-			try {
-				Sudoku sudoku = new Sudoku(puzzle);
+		long end, start;
+
+		int[][] puzzle;
+
+		start = System.currentTimeMillis();
+		try {
+			puzzle = loader.getNext();		
+			while (puzzle != null) {
+				puzzles++;
 				try {
+					Sudoku sudoku = new Sudoku(puzzle);
 					Solver solver = new Solver(sudoku);
+
 					solver.solve();
 					if(sudoku.isSolved())
 						solved++;
-				} catch (InvalidSudokuException ex) {
+					
+				} catch(InvalidSudokuException ex) {
 					invalid++;
+				} catch(SudokuException ex) {
+					// count as not solved
 				}
-			} catch(SudokuException ex) {
-				// count as not solved
+				puzzle = loader.getNext();
 			}
-			puzzle = loader.getNext();
+		} catch (SudokuReaderException e) {
+			errorExit("File " + filename + " is not valid.");
+		} catch (IOException e) {
+			errorExit("Error reading " + filename + ".");
 		}
 		end = System.currentTimeMillis();
 		
+		if(puzzles == 0) {
+			errorExit("No puzzles found in " + filename + ".");
+		}
 		System.out.printf("Puzzles: %d\nSolved: %d (%.1f%%)\nInvalid puzzles: %d\nTime: %.2fs (%.2fms average per puzzle)\n\n", 
 				puzzles, solved, (double)solved/puzzles * 100, invalid, (double)(end-start)/1000, (double)(end-start)/puzzles);
 		
 		System.exit(0);
 		
+	}
+	
+	private static void errorExit(String message) {
+		System.err.println(message);
+		System.exit(1);
 	}
 
 }

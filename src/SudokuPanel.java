@@ -18,6 +18,8 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+
 import javax.swing.*;
 
 
@@ -52,6 +54,7 @@ public class SudokuPanel extends JPanel implements ActionListener {
         numberGroup = new ButtonGroup();
         for(int i = 1; i <= Sudoku.SUDOKU_SIZE; i++) {
         	JToggleButton b = new JToggleButton(Integer.toString(i));
+        	b.putClientProperty("value", i);
         	numberGroup.add(b);
         	b.addActionListener(this);
         	numberButtons.add(b);
@@ -59,13 +62,20 @@ public class SudokuPanel extends JPanel implements ActionListener {
         
         JButton next = new JButton("Next puzzle");
         next.addActionListener(this);
+        next.putClientProperty("type", 0);
         JButton solve = new JButton("Solve puzzle");
+        solve.putClientProperty("type", 1);
         solve.addActionListener(this);
+        JButton solveAll = new JButton("Solve all");
+        solveAll.setToolTipText("Solves all puzzles until an unsolvable puzzle is encountered.");
+        solveAll.putClientProperty("type", 2);
+        solveAll.addActionListener(this);
         
         controls.add(numberButtons);
         controls.add(Box.createVerticalStrut(20));
         controls.add(next);
         controls.add(solve);
+        controls.add(solveAll);
 
         add(controls);
 	}
@@ -73,12 +83,22 @@ public class SudokuPanel extends JPanel implements ActionListener {
 	// loads and solves as many sudokus as possible from
 	// sudokus.txt and sets the final solved or unsolved sudoku to this.puzzle
 	private boolean loadSudoku() throws SudokuException {
-		int[][] loadedSudoku = loader.getNext();
-		if(loadedSudoku != null) {
-			puzzle = new Sudoku(loadedSudoku);
-			solver = new Solver(this.puzzle);
-			viewer.setPuzzle(puzzle);
-			return true;
+		int[][] loadedSudoku;
+		try {
+			loadedSudoku = loader.getNext();
+			if(loadedSudoku != null) {
+				puzzle = new Sudoku(loadedSudoku);
+				solver = new Solver(this.puzzle);
+				viewer.setPuzzle(puzzle);
+				return true;
+			}
+
+		} catch (SudokuReaderException e) {
+			showError("Entered file is invalid.");
+			System.exit(1);
+		} catch (IOException e) {
+			showError("File could not be read.");
+			System.exit(1);
 		}
 		return false;
 	}
@@ -88,7 +108,7 @@ public class SudokuPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() instanceof JToggleButton) {
 			JToggleButton b = (JToggleButton) e.getSource();
-			int value = Integer.parseInt(b.getText());
+			int value = (Integer)b.getClientProperty("value");
 			
 			if(b.isSelected()) {
 				viewer.setSpecial(value);
@@ -96,12 +116,22 @@ public class SudokuPanel extends JPanel implements ActionListener {
 		} else if(e.getSource() instanceof JButton) {
 			JButton action = (JButton) e.getSource();
 			try {
-				if(action.getText().startsWith("Next")) {
+				switch((Integer)action.getClientProperty("type")) {
+				case 0: // next
 					if(!loadSudoku())
 						action.setEnabled(false);
-				} else {
+					break;
+				case 1: // solve 1
 					solver.solve();
+					break;
+				case 2: // solve all
+					while(loadSudoku()) {
+						solver.solve();
+						if(!puzzle.isSolved())
+							break;
+					}
 				}
+
 			} catch(InvalidSudokuException ex) {
 				showError("Invalid sudoku");
 			} catch (SudokuException ex) {
