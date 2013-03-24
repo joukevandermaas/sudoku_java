@@ -11,7 +11,7 @@ in the following format:
 ...7.1..5
 ..5..21..
 
-Lines starting with % will be ignored.
+And have UTF-16 encoding. Lines starting with % will be ignored.
 
 For an overview of important classes and methods, see the file
 design_overview.pdf.

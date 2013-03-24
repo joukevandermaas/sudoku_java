@@ -24,8 +24,9 @@ public class Solver {
 			new ForcingChainsStrategy()
 			};
 	
-	public Solver(Sudoku puzzle) {
+	public Solver(Sudoku puzzle) throws SudokuException, InvalidSudokuException {
 		this.sudoku = puzzle;
+		strategies[0].removePossibilities(sudoku);
 	}
 	
 	// Solves the sudoku. Returns when the sudoku is solved,

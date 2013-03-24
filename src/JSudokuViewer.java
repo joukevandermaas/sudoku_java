@@ -25,19 +25,23 @@ import java.awt.Rectangle;
 import javax.swing.JComponent;
 
 public class JSudokuViewer extends JComponent {
-
+	private static final long serialVersionUID = 1421004190537806983L;
 	private Sudoku puzzle;
 	private int cellSize = 50;
 	private int puzzleDim = cellSize * Sudoku.SUDOKU_SIZE;
 	private int special = -1;
 	private Color highlight = Color.red;
 	
-	public JSudokuViewer(Sudoku puzzle) {
-		this.puzzle = puzzle;
+	public JSudokuViewer() {
 		this.setMinimumSize(new Dimension(puzzleDim, puzzleDim));
 		this.setPreferredSize(this.getMinimumSize());
 		this.setMaximumSize(new Dimension((int)(puzzleDim * 1.2), (int)(puzzleDim * 1.2)));
 		this.setBounds(0, 0, puzzleDim, puzzleDim);
+	}
+	
+	public void setPuzzle(Sudoku puzzle) {
+		this.puzzle = puzzle;
+		this.repaint();
 	}
 	
 	public void setSpecial(int value) {
@@ -69,12 +73,14 @@ public class JSudokuViewer extends JComponent {
 		
 		drawFrame((Graphics2D)g, new Point(1, 1)); // 1,1 for thicker border
 		
-		for(int i = 0; i < Sudoku.SUDOKU_SIZE; i++) {
-			for(int j = 0; j < Sudoku.SUDOKU_SIZE; j++) {
-				try {
-					drawCell((Graphics2D)g, puzzle.getCell(i, j), new Point(cellSize * j, cellSize * i));
-				} catch (SudokuException e) {
-					e.printStackTrace();
+		if(puzzle != null) {
+			for(int i = 0; i < Sudoku.SUDOKU_SIZE; i++) {
+				for(int j = 0; j < Sudoku.SUDOKU_SIZE; j++) {
+					try {
+						drawCell((Graphics2D)g, puzzle.getCell(i, j), new Point(cellSize * j, cellSize * i));
+					} catch (SudokuException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}

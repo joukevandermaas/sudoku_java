@@ -13,7 +13,7 @@
  * 
  */
 
-public class InvalidSudokuException extends Exception{
+public class InvalidSudokuException extends SudokuException{
 	private static final long serialVersionUID = -152735031103016681L;
 	
 	public InvalidSudokuException() {
