@@ -13,7 +13,7 @@ import java.util.List;
 public class OneOfEachStrategy implements Strategy {
 
 	@Override
-	public boolean removePossibilities(Sudoku puzzle) throws SudokuException {
+	public boolean removePossibilities(Sudoku puzzle) throws SudokuException, InvalidSudokuException {
 		boolean changed = false;
 		
 		for(CellContainer container : puzzle.getAllContainers()) {

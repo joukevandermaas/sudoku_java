@@ -34,41 +34,41 @@ public class Loader implements Closeable {
 		this.file = file;
 	}
 	
-	public int[][] getNext() {
+	public int[][] getNext() throws SudokuReaderException, IOException {
         String[] rows = readRows();
         int[][] puzzle = new int[Sudoku.SUDOKU_SIZE][Sudoku.SUDOKU_SIZE];
         
         if(rows == null)
         	return null;
         
-        for(int i = 0; i < rows.length; i++) {
-        	char[] chars = rows[i].toCharArray();
-        	for(int j = 0; j < chars.length; j++) {
-        		if(chars[j] == '.')
-        			continue;
-        		else
-        			puzzle[i][j] = Integer.parseInt(String.valueOf(chars[j]));
-        	}
+        try {
+	        for(int i = 0; i < rows.length; i++) {
+	        	char[] chars = rows[i].toCharArray();
+	        	for(int j = 0; j < chars.length; j++) {
+	        		if(chars[j] == '.')
+	        			continue;
+	        		else
+	        			puzzle[i][j] = Integer.parseInt(String.valueOf(chars[j]));
+	        	}
+	        }
+        } catch (NumberFormatException ex) {
+        	throw new SudokuReaderException("Invalid file");
         }
         
         return puzzle;
 	}
 	
-	private String[] readRows() {
+	private String[] readRows() throws IOException {
 		String[] rows = new String[Sudoku.SUDOKU_SIZE];
-		try {
-			int counter = 0;
-			while(counter < Sudoku.SUDOKU_SIZE) {
-				String row = file.readLine();
-				if(row == null)
-					return null;
-				else if(row.startsWith("%") || row.isEmpty()) // comment
-					continue;
-				else
-					rows[counter++] = row;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		int counter = 0;
+		while(counter < Sudoku.SUDOKU_SIZE) {
+			String row = file.readLine();
+			if(row == null)
+				return null;
+			else if(row.startsWith("%") || row.isEmpty()) // comment
+				continue;
+			else
+				rows[counter++] = row;
 		}
 		return rows;
 	}

@@ -15,13 +15,14 @@
  */
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 
 public class HiddenTwinStrategy implements Strategy {
 
 	@Override
-	public boolean removePossibilities(Sudoku puzzle) throws SudokuException {
+	public boolean removePossibilities(Sudoku puzzle) throws SudokuException, InvalidSudokuException {
 		boolean result = false;
 		
 		for (CellContainer c : puzzle.getAllContainers()) {
@@ -33,7 +34,7 @@ public class HiddenTwinStrategy implements Strategy {
 	}
 
 	private boolean findHiddenTwins(CellContainer container)
-			throws SudokuException {
+			throws SudokuException, InvalidSudokuException {
 		if (container.getValues().size() >= Sudoku.SUDOKU_SIZE - 2)
 			return false;
 
@@ -60,16 +61,12 @@ public class HiddenTwinStrategy implements Strategy {
 	}
 
 	private boolean removeOtherPossibilities(List<Cell> possibleCells, int n1,
-			int n2) throws SudokuException {
+			int n2) throws SudokuException, InvalidSudokuException {
 		boolean result = false;
 		
 		for (Cell c : possibleCells) {
-			for (int i = 1; i <= Sudoku.SUDOKU_SIZE; i++) {
-				if (i != n1 && i != n2) {
-					if(c.removePossibility(i))
-						result = true;
-				}
-			}
+			if(c.removeOtherPossibilities(Arrays.asList(n1, n2)))
+				result = true;
 		}
 		
 		return result;

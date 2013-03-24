@@ -21,29 +21,39 @@ public class Solver {
 			new LockedStrategy(),
 			new DoubleLockedStrategy(),
 			new NakedTwinStrategy(),
-			new HiddenTwinStrategy()
+			new HiddenTwinStrategy(),
+			new ForcingChainsStrategy()
 			};
 	
-	public Solver(Sudoku puzzle) {
+	public Solver(Sudoku puzzle) throws SudokuException, InvalidSudokuException {
 		this.sudoku = puzzle;
+		strategies[0].removePossibilities(sudoku);
 	}
 	
 	// Solves the sudoku. Returns when the sudoku is solved,
 	// or when no more steps could be taken (ie. the sudoku is
 	// invalid or it was too hard).
-	public void solve() throws SudokuException {
+	public void solve() throws SudokuException, InvalidSudokuException {
 		boolean madeProgress = true;
+		
+		// strategies[0] fixes special case and ensures no wrong number will
+		// be entered in a CellContainer with only one empty cell at the start.
+		strategies[0].removePossibilities(sudoku);
 		
 		while(madeProgress && !sudoku.isSolved()) {
 			madeProgress = false;
+			
+			if (enterValue())
+				madeProgress = true;
+			
 			for(Strategy strat : strategies) {
-				if (strat.removePossibilities(sudoku)) {
+				// Only use more advanced strategies when the most simple 
+				// one fails and no more numbers can be entered directly.
+				if (strat.removePossibilities(sudoku) || madeProgress) {
 					madeProgress = true;
 					break;
 				}
 			}
-			if (enterValue())
-				madeProgress = true;
 		}
 	}
 
@@ -56,29 +66,28 @@ public class Solver {
 	// number is entered. The possibilities should be updated before more numbers
 	// are entered.
 	private boolean enterValue() throws SudokuException {
-		for(CellContainer c : sudoku.getAllContainers()) {
-			if(c.isSolved())
-				continue;
-			// skip a container if needed
-			if(!enterSingle(c)) {
-				if (enterHiddenSingle(c))
-					return true;
-			}
-			else
+		for(CellContainer c : sudoku.getSquares()) {
+			if(enterSingles(c))
 				return true;
 		}
+		
+		for(CellContainer c : sudoku.getAllContainers())
+			if(enterHiddenSingle(c))
+				return true;
 		return false;
 	}
 	
 	// if there is one possibility left then that will be the value
-	private boolean enterSingle(CellContainer container) throws SudokuException {
+	private boolean enterSingles(CellContainer container) throws SudokuException {
+		boolean result = false;
+		
 		for(Cell c : container.getCells()) {
 			if(!c.hasValue() && c.getPossibilities().size() == 1) {
 				c.setValue(c.getPossibilities().get(0));
-				return true;
+				result = true;
 			}
 		}
-		return false;
+		return result;
 	}
 	
 	// if a possible value can go in only one spot then that will be the value
