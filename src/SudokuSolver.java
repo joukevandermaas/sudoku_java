@@ -11,17 +11,18 @@ public class SudokuSolver {
 		if(args.length > 0) {
 			filename = args[0];
 		}
-		if(args.length > 1) {
-			if(args[1].equals("-b"))
-				executeBatchMode(filename);
-		}
 		
 		Loader loader = null;
 		try {
-			loader = Loader.fromFile(filename);
+			loader = Loader.loadPremadeFile(filename);
 		} catch (FileNotFoundException e) {
 			JOptionPane.showMessageDialog(null, "File not found.", "Error", JOptionPane.ERROR_MESSAGE);
 			System.exit(1);
+		}
+		
+		if(args.length > 1) {
+			if(args[1].equals("-b"))
+				executeBatchMode(loader);
 		}
 		
 		JFrame gui = new JFrame();
@@ -32,23 +33,18 @@ public class SudokuSolver {
 
 	}
 
-	private static void executeBatchMode(String filename) {
-		Loader loader = null;
-		try {
-			loader = Loader.fromFile(filename);
-		} catch(FileNotFoundException e) {
-			errorExit("File not found.");
-		}
-		System.out.println("Starting batchmode on file " + filename + "\nThis might take a while.\n");
+	private static void executeBatchMode(Loader loader) {
+		System.out.println("Starting batchmode\nThis might take a while.\n");
 		
 		int solved = 0;
 		int puzzles = 0;
 		int invalid = 0;
+		long totalTime = 0;
 		long end, start;
 
 		int[][] puzzle;
 
-		start = System.currentTimeMillis();
+		System.out.print("Solving puzzle 1");
 		try {
 			puzzle = loader.getNext();		
 			while (puzzle != null) {
@@ -57,7 +53,11 @@ public class SudokuSolver {
 					Sudoku sudoku = new Sudoku(puzzle);
 					Solver solver = new Solver(sudoku);
 
+					start = System.currentTimeMillis();
 					solver.solve();
+					end = System.currentTimeMillis();
+					totalTime += end - start;
+					
 					if(sudoku.isSolved())
 						solved++;
 					
@@ -67,26 +67,27 @@ public class SudokuSolver {
 					// count as not solved
 				}
 				puzzle = loader.getNext();
+				System.out.print("\rSolving puzzle " + puzzles);
+				//break;
 			}
 		} catch (SudokuReaderException e) {
-			errorExit("File " + filename + " is not valid.");
+			errorExit("Invalid file.");
 		} catch (IOException e) {
-			errorExit("Error reading " + filename + ".");
+			errorExit("Error reading the file.");
 		}
-		end = System.currentTimeMillis();
 		
 		if(puzzles == 0) {
-			errorExit("No puzzles found in " + filename + ".");
+			errorExit("No puzzles found.");
 		}
-		System.out.printf("Puzzles: %d\nSolved: %d (%.1f%%)\nInvalid puzzles: %d\nTime: %.2fs (%.2fms average per puzzle)\n\n", 
-				puzzles, solved, (double)solved/puzzles * 100, invalid, (double)(end-start)/1000, (double)(end-start)/puzzles);
+		System.out.printf("\n\nPuzzles: %d\nSolved: %d (%.1f%%)\nInvalid puzzles: %d\nTime: %.2fs (%.2fms average per puzzle)\n\n", 
+				puzzles, solved, (double)solved/puzzles * 100, invalid, (double)totalTime/1000, (double)totalTime/puzzles);
 		
 		System.exit(0);
 		
 	}
 	
 	private static void errorExit(String message) {
-		System.err.println(message);
+		System.err.println("\n" + message);
 		System.exit(1);
 	}
 
