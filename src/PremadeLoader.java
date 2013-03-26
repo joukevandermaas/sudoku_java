@@ -28,7 +28,7 @@ public class PremadeLoader extends Loader {
         int[][] puzzle = new int[Sudoku.SUDOKU_SIZE][Sudoku.SUDOKU_SIZE];
         String line = file.readLine();
         
-        if(line == null)
+        if(line == null || line.isEmpty())
         	return null;
         
         char[] chars = line.toCharArray();

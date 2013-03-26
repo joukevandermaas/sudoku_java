@@ -19,6 +19,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.swing.*;
 
@@ -63,6 +64,9 @@ public class SudokuPanel extends JPanel implements ActionListener {
         JButton next = new JButton("Next puzzle");
         next.addActionListener(this);
         next.putClientProperty("type", 0);
+        JButton solveStep = new JButton("Take step");
+        solveStep.putClientProperty("type", 3);
+        solveStep.addActionListener(this);
         JButton solve = new JButton("Solve puzzle");
         solve.putClientProperty("type", 1);
         solve.addActionListener(this);
@@ -74,10 +78,18 @@ public class SudokuPanel extends JPanel implements ActionListener {
         controls.add(numberButtons);
         controls.add(Box.createVerticalStrut(20));
         controls.add(next);
+        controls.add(Box.createVerticalStrut(10));
+        controls.add(solveStep);
         controls.add(solve);
         controls.add(solveAll);
 
         add(controls);
+        
+        try {
+			loadSudoku();
+		} catch (SudokuException e) {
+			showError("Couldn't load sudoku.");
+		}
 	}
 	
 	// loads and solves as many sudokus as possible from
@@ -86,6 +98,8 @@ public class SudokuPanel extends JPanel implements ActionListener {
 		int[][] loadedSudoku;
 		try {
 			loadedSudoku = loader.getNext();
+
+			System.out.println();
 			if(loadedSudoku != null) {
 				puzzle = new Sudoku(loadedSudoku);
 				solver = new Solver(this.puzzle);
@@ -130,6 +144,9 @@ public class SudokuPanel extends JPanel implements ActionListener {
 						if(!puzzle.isSolved())
 							break;
 					}
+					break;
+				case 3:
+					solver.takeStep();
 				}
 
 			} catch(InvalidSudokuException ex) {

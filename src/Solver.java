@@ -20,13 +20,16 @@ public class Solver {
 			new OneOfEachStrategy(),
 			new LockedStrategy(),
 			new DoubleLockedStrategy(),
-			new NakedTwinStrategy(),
+			new NakedGroupStrategy(),
 			new HiddenTwinStrategy(),
 			new ForcingChainsStrategy()
 			};
 	
 	public Solver(Sudoku puzzle) throws SudokuException, InvalidSudokuException {
 		this.sudoku = puzzle;
+		
+		// strategies[0] fixes special case and ensures no wrong number will
+		// be entered in a CellContainer with only one empty cell at the start.
 		strategies[0].removePossibilities(sudoku);
 	}
 	
@@ -34,29 +37,27 @@ public class Solver {
 	// or when no more steps could be taken (ie. the sudoku is
 	// invalid or it was too hard).
 	public void solve() throws SudokuException, InvalidSudokuException {
-		boolean madeProgress = true;
-		
-		// strategies[0] fixes special case and ensures no wrong number will
-		// be entered in a CellContainer with only one empty cell at the start.
-		strategies[0].removePossibilities(sudoku);
-		
-		while(madeProgress && !sudoku.isSolved()) {
-			madeProgress = false;
-			
-			if (enterValue())
-				madeProgress = true;
-			
-			for(Strategy strat : strategies) {
-				// Only use more advanced strategies when the most simple 
-				// one fails and no more numbers can be entered directly.
-				if (strat.removePossibilities(sudoku) || madeProgress) {
-					madeProgress = true;
-					break;
-				}
-			}
-		}
+		while(takeStep() && !sudoku.isSolved());
 	}
 
+	public boolean takeStep() throws InvalidSudokuException, SudokuException {
+		boolean madeProgress = false;
+		
+		if (enterValue())
+			madeProgress = true;
+		
+		for(Strategy strat : strategies) {
+			// Only use more advanced strategies when the most simple 
+			// one fails and no more numbers can be entered directly.
+			if (strat.removePossibilities(sudoku) || madeProgress) {
+				madeProgress = true;
+				break;
+			}
+		}
+		
+		return madeProgress;
+	}
+	
 	// returns the sudoku this Solver is solving
 	public Sudoku getSudoku() {
 		return sudoku;
@@ -66,15 +67,17 @@ public class Solver {
 	// number is entered. The possibilities should be updated before more numbers
 	// are entered.
 	private boolean enterValue() throws SudokuException {
+		boolean result = false;
 		for(CellContainer c : sudoku.getSquares()) {
 			if(enterSingles(c))
-				return true;
+				result = true;
 		}
 		
-		for(CellContainer c : sudoku.getAllContainers())
-			if(enterHiddenSingle(c))
-				return true;
-		return false;
+		if(!result)
+			for(CellContainer c : sudoku.getAllContainers())
+				if(enterHiddenSingle(c))
+					return true;
+		return result;
 	}
 	
 	// if there is one possibility left then that will be the value

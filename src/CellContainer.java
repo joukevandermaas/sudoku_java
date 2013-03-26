@@ -17,7 +17,9 @@
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CellContainer {
 	private Cell[] cells;
@@ -29,12 +31,13 @@ public class CellContainer {
 		this.cells = cells;
 	}
 
-	public List<Integer> getValues() throws SudokuException {
-		List<Integer> values = new ArrayList<Integer>();
+	public Set<Integer> getValues() throws SudokuException {
+		Set<Integer> values = new HashSet<Integer>();
 
 		for (Cell c : cells) {
 			if (c.hasValue()) {
-				values.add(c.getValue());
+				if(!values.add(c.getValue()))
+					throw new InvalidSudokuException("Double values are not allowed.");
 			}
 		}
 

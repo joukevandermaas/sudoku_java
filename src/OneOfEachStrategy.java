@@ -8,6 +8,7 @@
  * Copyright notice
  */
 import java.util.List;
+import java.util.Set;
 
 
 public class OneOfEachStrategy implements Strategy {
@@ -17,7 +18,7 @@ public class OneOfEachStrategy implements Strategy {
 		boolean changed = false;
 		
 		for(CellContainer container : puzzle.getAllContainers()) {
-			List<Integer> values = container.getValues();
+			Set<Integer> values = container.getValues();
 			for(Cell c : container.getCells()) {
 				if(!c.hasValue() && c.removeAllPossibilities(values)) {
 					changed = true;

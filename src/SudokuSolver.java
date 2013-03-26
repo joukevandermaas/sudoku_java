@@ -1,5 +1,6 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashSet;
 
 import javax.swing.*;
 
@@ -34,7 +35,7 @@ public class SudokuSolver {
 	}
 
 	private static void executeBatchMode(Loader loader) {
-		System.out.println("Starting batchmode\nThis might take a while.\n");
+		System.out.println("Starting batchmode\nThis might take a while.");
 		
 		int solved = 0;
 		int puzzles = 0;
@@ -44,11 +45,11 @@ public class SudokuSolver {
 
 		int[][] puzzle;
 
-		System.out.print("Solving puzzle 1");
 		try {
 			puzzle = loader.getNext();		
 			while (puzzle != null) {
 				puzzles++;
+				System.out.print("\rSolving puzzle " + puzzles);
 				try {
 					Sudoku sudoku = new Sudoku(puzzle);
 					Solver solver = new Solver(sudoku);
@@ -67,7 +68,6 @@ public class SudokuSolver {
 					// count as not solved
 				}
 				puzzle = loader.getNext();
-				System.out.print("\rSolving puzzle " + puzzles);
 				//break;
 			}
 		} catch (SudokuReaderException e) {
