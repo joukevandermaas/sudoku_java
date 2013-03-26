@@ -5,7 +5,7 @@ import java.util.List;
 public class ForcingChainsStrategy implements Strategy {
 	// Don't allow too many levels of recursion or the solver
 	// will get very slow.
-	private static final int maxLevel = 4;
+	private static final int maxLevel = 1;
 	private static int currentLevel = 0;
 	
 	@Override
