@@ -5,8 +5,12 @@ import java.util.List;
 public class ForcingChainsStrategy implements Strategy {
 	// Don't allow too many levels of recursion or the solver
 	// will get very slow.
-	private static final int maxLevel = 4;
+	private static int maxLevel = 4;
 	private static int currentLevel = 0;
+
+	public static void setMaxDepth(int depth) {
+		maxLevel = depth;
+	}
 	
 	@Override
 	public boolean removePossibilities(Sudoku puzzle) throws SudokuException, InvalidSudokuException {
