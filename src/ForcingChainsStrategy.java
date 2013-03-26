@@ -5,7 +5,7 @@ import java.util.List;
 public class ForcingChainsStrategy implements Strategy {
 	// Don't allow too many levels of recursion or the solver
 	// will get very slow.
-	private static final int maxLevel = 1;
+	private static final int maxLevel = 5;
 	private static int currentLevel = 0;
 	
 	@Override
@@ -42,8 +42,8 @@ public class ForcingChainsStrategy implements Strategy {
 	private Cell finishChain(int[][] copy, Cell c) throws SudokuException, InvalidSudokuException {
 		Sudoku pos1 = new Sudoku(copy);
 		Sudoku pos2 = new Sudoku(copy);
-		Solver solver1;
-		Solver solver2;
+		Solver solver1 = new Solver(pos1);
+		Solver solver2 = new Solver(pos2);
 		
 		// Try to solve the puzzle with both values.
 		// note: one of these will be the correct value no matter what,
@@ -53,39 +53,20 @@ public class ForcingChainsStrategy implements Strategy {
 		int val2 = c.getPossibilities().get(1);
 		pos1.getCell(c.getRow(), c.getColumn()).setValue(val1);
 		pos2.getCell(c.getRow(), c.getColumn()).setValue(val2);
-		solver1 = new Solver(pos1);
-		solver2 = new Solver(pos2);
 		
 		// One of these will likely throw (depending on the complexity of the
 		// puzzle and the value of maxLevel), but never both (unless the puzzle
 		// is in fact invalid).
-		
-		boolean pos1Done = false;
-		boolean pos2Done = false;
-		while(!pos1Done || !pos2Done) {
-			try {
-				if(!pos1Done) {
-					pos1Done = solver1.takeStep() ? pos1.isSolved() : true;
-				}
-				
-			} catch (InvalidSudokuException e) {
-				pos1Done = true;
-			}
-			try {
-				if(!pos2Done) {
-					pos2Done = solver2.takeStep() ? pos2.isSolved() : true;
-				}
-				
-			} catch (InvalidSudokuException e) {
-				pos2Done = true;
-			}
-			
-			Cell result = findNewOverlap(pos1, pos2, copy);
-			if(result != null)
-				return result;
+		try {
+			solver1.solve();
+		} catch (InvalidSudokuException e) {
+		}
+		try {
+			solver2.solve();
+		} catch (InvalidSudokuException e) {
 		}
 		
-		return null;
+		return findNewOverlap(pos1, pos2, copy);
 	}
 
 	private Cell findNewOverlap(Sudoku pos1, Sudoku pos2, int[][] copy) throws SudokuException {
