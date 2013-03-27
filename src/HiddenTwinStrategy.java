@@ -4,10 +4,10 @@
  * these two cells are the same, all other possibilities should be removed.
  * 
  * Version information
- * v0.2 (alpha 1)
+ * v1
  *
  * Date
- * 15/03/2013
+ * 27/03/2013
  * 
  * Author
  * Jouke van der Maas & Koen Keune
@@ -22,9 +22,10 @@ import java.util.List;
 public class HiddenTwinStrategy implements Strategy {
 
 	@Override
-	public boolean removePossibilities(Sudoku puzzle) throws SudokuException, InvalidSudokuException {
+	public boolean removePossibilities(Sudoku puzzle) throws SudokuException,
+			InvalidSudokuException {
 		boolean result = false;
-		
+
 		for (CellContainer c : puzzle.getAllContainers()) {
 			if (findHiddenTwins(c))
 				result = true;
@@ -50,7 +51,7 @@ public class HiddenTwinStrategy implements Strategy {
 					continue;
 				List<Cell> otherCells = cells.get(j);
 				if (possibleCells.containsAll(otherCells)) {
-					if(removeOtherPossibilities(possibleCells, i, j))
+					if (removeOtherPossibilities(possibleCells, i, j))
 						result = true;
 				}
 			}
@@ -63,12 +64,12 @@ public class HiddenTwinStrategy implements Strategy {
 	private boolean removeOtherPossibilities(List<Cell> possibleCells, int n1,
 			int n2) throws SudokuException, InvalidSudokuException {
 		boolean result = false;
-		
+
 		for (Cell c : possibleCells) {
-			if(c.removeOtherPossibilities(Arrays.asList(n1, n2)))
+			if (c.removeOtherPossibilities(Arrays.asList(n1, n2)))
 				result = true;
 		}
-		
+
 		return result;
 	}
 

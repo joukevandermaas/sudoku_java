@@ -1,13 +1,13 @@
 /*
- * Loader.java
- * Loads the sudoku file, the format: every non-value has a dot and every 
- * value is a number
+ * GeneratedLoader.java
+ * Loads a generated sudoku file, the format: every non-value has a dot and 
+ * every value is a number
  * 
  * Version information
- * v0.2 (alpha 1)
+ * v1
  *
  * Date
- * 15/03/2013
+ * 27/03/2013
  * 
  * Author
  * Jouke van der Maas & Koen Keune
@@ -19,43 +19,44 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class GeneratedLoader extends Loader {
-		
+
 	public GeneratedLoader(BufferedReader file) throws FileNotFoundException {
 		super(file);
 	}
-	
+
 	public int[][] getNext() throws SudokuReaderException, IOException {
-        String[] rows = readRows();
-        int[][] puzzle = new int[Sudoku.SUDOKU_SIZE][Sudoku.SUDOKU_SIZE];
-        
-        if(rows == null)
-        	return null;
-        
-        try {
-	        for(int i = 0; i < rows.length; i++) {
-	        	char[] chars = rows[i].toCharArray();
-	        	for(int j = 0; j < chars.length; j++) {
-	        		if(chars[j] == '.')
-	        			continue;
-	        		else
-	        			puzzle[i][j] = Integer.parseInt(String.valueOf(chars[j]));
-	        	}
-	        }
-        } catch (NumberFormatException ex) {
-        	throw new SudokuReaderException("Invalid file");
-        }
-        
-        return puzzle;
+		String[] rows = readRows();
+		int[][] puzzle = new int[Sudoku.SUDOKU_SIZE][Sudoku.SUDOKU_SIZE];
+
+		if (rows == null)
+			return null;
+
+		try {
+			for (int i = 0; i < rows.length; i++) {
+				char[] chars = rows[i].toCharArray();
+				for (int j = 0; j < chars.length; j++) {
+					if (chars[j] == '.')
+						continue;
+					else
+						puzzle[i][j] = Integer.parseInt(String
+								.valueOf(chars[j]));
+				}
+			}
+		} catch (NumberFormatException ex) {
+			throw new SudokuReaderException("Invalid file");
+		}
+
+		return puzzle;
 	}
-	
+
 	private String[] readRows() throws IOException {
 		String[] rows = new String[Sudoku.SUDOKU_SIZE];
 		int counter = 0;
-		while(counter < Sudoku.SUDOKU_SIZE) {
+		while (counter < Sudoku.SUDOKU_SIZE) {
 			String row = file.readLine();
-			if(row == null)
+			if (row == null)
 				return null;
-			else if(row.startsWith("%") || row.isEmpty()) // comment
+			else if (row.startsWith("%") || row.isEmpty()) // comment
 				continue;
 			else
 				rows[counter++] = row;
