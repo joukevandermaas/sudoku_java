@@ -1,6 +1,5 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashSet;
 
 import javax.swing.*;
 
@@ -9,10 +8,29 @@ public class SudokuSolver {
 
 	public static void main(String[] args) {
 		String filename = "";
+		int depth = 4;
+		boolean batchMode = false;
+		
 		if(args.length > 0) {
 			filename = args[0];
 		}
 		
+		for(int i = 1; i < args.length; i++) {
+			String arg = args[i];
+			try {
+				int value = Integer.parseInt(arg);
+				depth = value;
+			} catch(NumberFormatException ex) {
+				if(arg.equals("-b")) {
+					batchMode = true;
+				} else {
+					errorExit("Syntax:\njava SudokuSolver <filename> [-b] [max depth]");
+				}
+					
+			}
+		}
+		
+		ForcingChainsStrategy.setMaxDepth(depth);
 		Loader loader = null;
 		try {
 			loader = Loader.loadPremadeFile(filename);
@@ -21,10 +39,8 @@ public class SudokuSolver {
 			System.exit(1);
 		}
 		
-		if(args.length > 1) {
-			if(args[1].equals("-b"))
-				executeBatchMode(loader);
-		}
+		if(batchMode)
+			executeBatchMode(loader);
 		
 		JFrame gui = new JFrame();
 		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
