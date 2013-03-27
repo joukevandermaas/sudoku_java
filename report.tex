@@ -62,20 +62,24 @@ breakatwhitespace=false,    % sets if automatic breaks should only happen at whi
 %%%                   EIND BS                   %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title{Design and Style Guide}
+\title{Implementing a logical sudoku solver}
 \author{Jouke van der Maas \& Koen Keune}
 
 \begin{document}
 \maketitle
 
 \section{Overview}
-During this project, a sudoku solver is implemented. Only
-logical solving strategies are used; there are no brute-force methods.\
+During this project, a sudoku solver was implemented. Only
+logical solving strategies were used; there are no brute-force methods.
 The underlying principle to the solve method is that once
 possible numbers have been calculated for each square, they can only be removed.
 Removal of possible numbers is achieved by a strategy.
 By trying strategies repeatedly, one of two states can always be achieved. From these
 states, a new number can be entered and the process can repeat.
+
+\subsection{Terminology}
+A sudoku consists of nine \emph{rows}, \emph{columns} and \emph{squares}, called containers. Each of these
+contains nine cells. Cells can have a value (numbers one through nine) or a set of up to nine possibilities.
 
 \subsection{End-states}
 The first end-state from which a new number can be entered is the 
@@ -86,99 +90,69 @@ cell within a container (row, column or square), that number should be entered. 
 other strategies implemented for the project only remove possibilities from cells, leading
 to one of these two end-states.
 
-\section{Usage}
-\subsection{SudokuApp}
-
 \section{Implementation}
-\subsection{Important types}
-The class \class{Sudoku} represents the puzzle. It holds \class{CellContainer}s that holds
-the individual \class{Cell}s. A \class{CellContainer} can either be a row, column or square
-within the sudoku. These can be represented using only one type, because their behaviour is
-exactly the same. The \class{Cell} class represents cells within the sudoku. This class can
-be in exactly one of two states; it can have a value or it can have a list of possible values.
-These two states were not separated in two subclasses of an abstract class for simplicities sake.
+The implementation is based around the use of strategies, implementations of the interface
+\class{Strategy}. The solver uses these to reduce the sudoku to one of the two end-states.
+The solver, sudoku representation and UI also support sudokus of other sizes (i.e. a 6x6
+sudoku), but no support was added for loading these from a file.
 
-The \class{Sudoku} is used by the class \class{Solver}. This class takes a \class{Sudoku} and solves it.
-It uses implementations of the interface \class{Strategy}. This interface defines a strategy for
-removing possibilities from cells, leading to one of the two end-states.
-
-\subsection{Important methods}
-\subsubsection{Sudoku}
-\begin{itemize}
-\item \method{}{Sudoku}{int[][]}\\
-The constructor takes a puzzle represented as a jagged array of ints (\java{int[][]}).
-
-\item \method{CellContainer[]}{getRows}{}\\
-      \method{CellContainer[]}{getColumns}{}\\
-      \method{CellContainer[]}{getSquares}{}\\
-      \method{CellContainer[]}{getAllContainers}{}\\
-These methods return the rows, columns and/or squares ordered from left to right, top to bottom.
-The return values are arrays because the number of containers never changes.
-\end{itemize}
-\subsubsection{CellContainer}
-\begin{itemize}
-\item \method{List<Integer>}{getValues}{}\\
-Returns a list of all values that have already been entered in this
-\\\class{CellContainer}.
-\item \method{Cell[]}{getCells}{}\\
-Returns an array containing the cells in this container. This is an array because the number
-of cells never changes.
-\end{itemize}
-\subsubsection{Cell}
-\begin{itemize}
-\item \method{List<Integer>}{getPossibilities}{}\\
-Returns a list containing all possibilities for this cell. Throws a \class{SudokuException} if
-the cell has a value.
-\item \method{boolean}{hasValue}{}\\
-Returns \java{true} if this cell has a value, false otherwise.
-\item \method{boolean}{removePossibility}{int}\\
-      \method{boolean}{removePossibilities}{Collection<Integer>}\\
-These methods remove one or more possible numbers from the list of possibilities. Throws a
-\class{SudokuException} if the cell has a value. Returns \java{true} if the possibilities were removed,
-\java{false} otherwise.
-\item \method{int}{getValue}{}\\
-Returns the value if there is one. Throws a \class{SudokuException} if there is not.
-\item \method{void}{setValue}{int}\\
-Changes the state of the cell from not having a value to having a value. Throws a \class{SudokuException}
-if the cell already had a value.
-\end{itemize}
-\subsubsection{Strategy}
-\begin{itemize}
-\item \method{boolean}{removePossibilities}{Sudoku}\\
-Removes one or more possibilities from the cells in the provided sudoku. Returns \java{true} if
-possibilities were removed, \java{false} otherwise.
-\end{itemize}
-\subsubsection{Solver}
-\begin{itemize}
-\item \method{void}{solve}{}\\
-Solves the sudoku provided in the constructor. The method loops over an array of \class{Strategy}
-implementations, calling each one on the sudoku. If a possibility was removed, it tries to fill
-in a number and starts again from the top of the list. The list is ordered so cheaper (in terms of
-time) strategies are at the top. This means that more complex strategies are only used if they are
-necessary. The method returns when the sudoku is solved or when no more possibilities could be removed
-and no more numbers could be filled in.
-\end{itemize}
-\section{Used Strategies}
+\subsection{Used Strategies}
 Following are the strategies that are used in this particular order based on complexity.
-\subsection{OneOfEach}
-Removes possibilities in a cell by looking at remaining possibilities in 
-rows, columns and squares.
-\subsection{Locked}
+\subsubsection{Basic Strategy}
+The most basic solving strategy (implemented in \class{OneOfEachStrategy}). Simply removes
+values that have already been entered for each row, column and square.
+\subsection{Locked Strategy}
 Searches for 2 or 3 possibilities in a column that are the same and don't 
-occur in another place in the square if so remove those possibilities on 
+occur in another place in the square. If one is found, remove those possibilities on 
 every other place on the same column.
-\subsection{DoubleLocked}
+\subsection{Double-Locked Strategy}
 Searches for possibilities that occurs in one row (or column) in a square
 and another row (or column) in another square so that blocks possibilities
 in those rows (or columns) in the third square.
-\subsection{NakedGroup}
-\subsection{HiddenTwin}
-\subsection{ForcingTwin}
-Looks at the consequences of filling the possibilities of a cell with two
-possibilities, removes a possibility if that possibility will be removed in
-both cases.
+\subsection{Naked Group Strategy}
+Searches for groups of cells that contain the same possibilities. For example,
+a group of three cells that have the same three possibilities ($n$ cells with the same $n$ possibilities). 
+When these are found, it is guaranteed the same possibility cannot occur anywhere else within the container,
+so those can be removed.
+\subsection{Hidden Twin Strategy}
+Similar to the naked group. When two possibilities are found in only two cells, and these cells are the same,
+nothing else can go in those two cells. This strategy is more complex than the naked group, so only twins are
+considered.
+\subsection{Forcing Chains Strategy}
+Looks at the consequences of filling the possibilities of a cell with two possible values.
+If both possibilities lead to the same value elsewhere, that value must be entered. This is the most
+complex strategy and can slow the solver down quite a bit.
 
-\section{Style Guide}
-The \href{http://www.oracle.com/technetwork/java/javase/documentation/codeconvtoc-136057.html}{Oracle Code Conventions for Java}
-are used as a guideline in naming of methods and types, commenting styles and code layout.
+\section{Results}
+On the provided file \texttt{big5} (containing $10.000$ sudokus), the solver performs quite
+well:
+\begin{verbatim}
+Puzzles: 10000
+Solved: 9989 (99.9%)
+Invalid puzzles: 0
+Time: 72.26s (7.23ms average per puzzle)
+\end{verbatim}
+
+On harder puzzles (such as the provided \texttt{top100}) it is a lot slower:
+\begin{verbatim}
+Puzzles: 100
+Solved: 99 (99.0%)
+Invalid puzzles: 0
+Time: 51.91s (519.10ms average per puzzle)
+\end{verbatim}
+
+Although this seems to be caused mainly by a few puzzles, that needs a lot of the
+more complicated strategies to solve. Without these puzzles the performance is much
+better:
+\begin{verbatim}
+Puzzles: 98
+Solved: 97 (99.0%)
+Invalid puzzles: 0
+Time: 16.69s (170.27ms average per puzzle)
+\end{verbatim}
+
+Overall the solver can solve most puzzles (about 99\% of the harder ones) and is pretty
+fast.
+
 \end{document}
+
