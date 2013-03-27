@@ -77,11 +77,18 @@ Removal of possible numbers is achieved by a strategy.
 By trying strategies repeatedly, one of two states can always be achieved. From these
 states, a new number can be entered and the process can repeat.
 
+\section{Implementation}
+The implementation is based around the use of strategies, implementations of the interface
+\class{Strategy}.
+The solver, sudoku representation and UI also support sudokus of other sizes (i.e. a 6x6
+sudoku), but no support was added for loading these from a file.
+
 \subsection{Terminology}
 A sudoku consists of nine \emph{rows}, \emph{columns} and \emph{squares}, called containers. Each of these
 contains nine cells. Cells can have a value (numbers one through nine) or a set of up to nine possibilities.
 
 \subsection{End-states}
+The solver uses strategies to reduce the sudoku to one of the two end-states.
 The first end-state from which a new number can be entered is the 
 \emph{Single Possibility rule}. This rule states that if a given cell has only one
 possible number, that number should be entered. The second end-state is the \emph{%
@@ -90,14 +97,8 @@ cell within a container (row, column or square), that number should be entered. 
 other strategies implemented for the project only remove possibilities from cells, leading
 to one of these two end-states.
 
-\section{Implementation}
-The implementation is based around the use of strategies, implementations of the interface
-\class{Strategy}. The solver uses these to reduce the sudoku to one of the two end-states.
-The solver, sudoku representation and UI also support sudokus of other sizes (i.e. a 6x6
-sudoku), but no support was added for loading these from a file.
-
 \subsection{Used Strategies}
-Following are the strategies that are used in this particular order based on complexity.
+Following are the strategies that are used in this particular order, based on complexity.
 \subsubsection{Basic Strategy}
 The most basic solving strategy (implemented in \class{OneOfEachStrategy}). Simply removes
 values that have already been entered for each row, column and square.
@@ -120,12 +121,12 @@ nothing else can go in those two cells. This strategy is more complex than the n
 considered.
 \subsection{Forcing Chains Strategy}
 Looks at the consequences of filling the possibilities of a cell with two possible values.
-If both possibilities lead to the same value elsewhere, that value must be entered. This is the most
+If both possibilities lead to the same value elsewhere, than that value must be entered. This is the most
 complex strategy and can slow the solver down quite a bit.
 
 \section{Results}
-On the provided file \texttt{big5} (containing $10.000$ sudokus), the solver performs quite
-well:
+On the provided file \texttt{big5} (containing $10.000$ sudokus), the solver performs with a 
+accuracy of $99.9$ \%:
 \begin{verbatim}
 Puzzles: 10000
 Solved: 9989 (99.9%)
@@ -133,7 +134,8 @@ Invalid puzzles: 0
 Time: 72.26s (7.23ms average per puzzle)
 \end{verbatim}
 
-On harder puzzles (such as the provided \texttt{top100}) it is a lot slower:
+The accuracy on harder puzzles (such as the provided \texttt{top100}) it is a similar
+accuracy, but it a lot slower:
 \begin{verbatim}
 Puzzles: 100
 Solved: 99 (99.0%)
@@ -151,8 +153,7 @@ Invalid puzzles: 0
 Time: 16.69s (170.27ms average per puzzle)
 \end{verbatim}
 
-Overall the solver can solve most puzzles (about 99\% of the harder ones) and is pretty
-fast.
+Overall the solver can solve most puzzles (about 99\% of the harder ones) and solves them on average pretty fast.
 
 \end{document}
 
