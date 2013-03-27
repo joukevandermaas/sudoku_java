@@ -1,27 +1,17 @@
-/*
- * SudokuApp.java
- * JApplet that attempts to solve all sudokus in sudokus.txt and
- * displays either the last sudoku that could not be solved or the
- * solution to the last sudoku in the file.
- * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
- * 
- */
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-
 import javax.swing.*;
 
+/**
+ * JPanel that initializes and controls a JSudokuViewer and some
+ * other ui elements.
+ * 
+ * @version 1.0
+ * @author Jouke van der Maas & Koen Keune
+ * 
+ */
 public class SudokuPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 3028028885712932036L;
 	private ButtonGroup numberGroup;
@@ -30,6 +20,12 @@ public class SudokuPanel extends JPanel implements ActionListener {
 	private Solver solver;
 	private Loader loader;
 
+	/**
+	 * Initializes the panel.
+	 * 
+	 * @param puzzleLoader
+	 * Used to load the puzzles that are to be displayed.
+	 */
 	public SudokuPanel(Loader puzzleLoader) {
 		super();
 
@@ -90,8 +86,13 @@ public class SudokuPanel extends JPanel implements ActionListener {
 		}
 	}
 
-	// loads and solves as many sudokus as possible from
-	// sudokus.txt and sets the final solved or unsolved sudoku to this.puzzle
+	/**
+	 * Loads a sudoku from the specified file.
+	 *  
+	 * @return true if the sudoku could be loaded, false otherwise.
+	 * @throws SudokuException when the loaded sudoku is not a proper
+	 * sudoku.
+	 */
 	private boolean loadSudoku() throws SudokuException {
 		int[][] loadedSudoku;
 		try {
@@ -115,7 +116,12 @@ public class SudokuPanel extends JPanel implements ActionListener {
 		return false;
 	}
 
-	// handles the button presses
+	/** 
+	 * Handles the button presses in the UI.
+	 * 
+	 * @param e
+	 * The event that caused this method to be called.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() instanceof JToggleButton) {
@@ -143,7 +149,7 @@ public class SudokuPanel extends JPanel implements ActionListener {
 							break;
 					}
 					break;
-				case 3:
+				case 3: // take solve step
 					solver.takeStep();
 				}
 
@@ -154,9 +160,15 @@ public class SudokuPanel extends JPanel implements ActionListener {
 			}
 		}
 
+		// any button press should initiate a repaint
 		viewer.repaint();
 	}
 
+	/**
+	 * Pops up a messagebox with the specified message.
+	 * @param message
+	 * The message to display.
+	 */
 	private void showError(String message) {
 		JOptionPane.showMessageDialog(null, message, "Error",
 				JOptionPane.ERROR_MESSAGE);

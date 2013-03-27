@@ -1,26 +1,18 @@
-/*
- * RemoveOnlyList.java
- * List<T> implementation that does not allow adding
- * or changing elements. An IllegalStateException will
- * be thrown if these operations are attempted.
- * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
- * 
- */
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+/**
+ * List<T> implementation that does not allow adding
+ * or changing elements. An IllegalStateException will
+ * be thrown if these operations are attempted.
+ * 
+ * @version 1.0
+ * @author Jouke van der Maas & Koen Keune
+ * 
+ */
 public class RemoveOnlyList<T> implements List<T> {
 	private ArrayList<T> list;
 

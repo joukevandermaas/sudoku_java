@@ -1,24 +1,16 @@
-/*
- * HiddenTwinStrategy.java
- * Strategy that searches for two numbers that can go in exactly two cells, if
- * these two cells are the same, all other possibilities should be removed.
- * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
- * 
- */
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 
+/**
+ * Strategy that searches for two numbers that can go in exactly two cells. If
+ * these two cells are the same, all other possibilities should be removed.
+ * 
+ * @version 1.0
+ * @author Jouke van der Maas & Koen Keune
+ * 
+ */
 public class HiddenTwinStrategy implements Strategy {
 
 	@Override

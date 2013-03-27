@@ -1,23 +1,15 @@
-/*
- * GeneratedLoader.java
- * Loads a generated sudoku file, the format: every non-value has a dot and 
- * every value is a number
- * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
- * 
- */
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+/**
+ * Loads a generated sudoku file, the format: every non-value has a dot and 
+ * every value is a number.
+ * 
+ * @version 1.0
+ * @author Jouke van der Maas & Koen Keune
+ * 
+ */
 public class GeneratedLoader extends Loader {
 
 	public GeneratedLoader(BufferedReader file) throws FileNotFoundException {

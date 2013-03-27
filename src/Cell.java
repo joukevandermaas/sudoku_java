@@ -1,23 +1,20 @@
-/*
- * Cell.java
- * Methods to access and modify cells, every cell has a value or possibilities
- * (the possible values for that cell).
- * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
- * 
- */
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Represents a cell within the sudoku. Each cell is in one of two possible states:
+ * 1. The cell has a value
+ * 2. The cell has a set of possible values.
+ * 
+ * In state 1, the Cell object is immutable; it cannot be changed to state 2 and
+ * the value is fixed. In state 2, possibilities can be removed (but not added) and
+ * the state can be changed to state 1.
+ * 
+ * @version 1.0
+ * @author Jouke van der Maas & Koen Keune
+ * 
+ */
 public class Cell {
 	private int value = 0;
 	private List<Integer> possibilities;

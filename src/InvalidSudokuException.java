@@ -1,15 +1,8 @@
-/*
- * InvalidSudokuException.java
+/**
  * This exception should be thrown whenever and invalid sudoku is encountered.
  * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
+ * @version 1.0
+ * @author Jouke van der Maas & Koen Keune
  * 
  */
 

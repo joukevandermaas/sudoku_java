@@ -1,29 +1,13 @@
-/*
- * JSudokuViewer.java
- * Component that draws a specific sudoku.
- * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
- * 
- */
-
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-
+import java.awt.*;
 import javax.swing.JComponent;
 
+/**
+ * Component that draws a specific sudoku.
+ * 
+ * @version 1.0
+ * @author Jouke van der Maas & Koen Keune
+ * 
+ */
 public class JSudokuViewer extends JComponent {
 	private static final long serialVersionUID = 1421004190537806983L;
 	private Sudoku puzzle;
@@ -40,11 +24,20 @@ public class JSudokuViewer extends JComponent {
 		this.setBounds(0, 0, puzzleDim, puzzleDim);
 	}
 
+	/**
+	 * Sets the puzzle to draw and causes a repaint.
+	 * @param puzzle
+	 * The new puzzle to draw.
+	 */
 	public void setPuzzle(Sudoku puzzle) {
 		this.puzzle = puzzle;
 		this.repaint();
 	}
 
+	/**
+	 * Sets the value to highlight.
+	 * @param value
+	 */
 	public void setSpecial(int value) {
 		this.special = value;
 		this.repaint();
@@ -89,6 +82,16 @@ public class JSudokuViewer extends JComponent {
 		}
 	}
 
+	/**
+	 * Draws a single cell at the specified position.
+	 * @param g
+	 * The graphics used for drawing.
+	 * @param c
+	 * The cell to draw.
+	 * @param p
+	 * The position of this cell on the canvas (not the sudoku).
+	 * @throws SudokuException
+	 */
 	private void drawCell(Graphics2D g, Cell c, Point p) throws SudokuException {
 		if (c.hasValue()) {
 			String value = Integer.toHexString(c.getValue());
@@ -127,6 +130,13 @@ public class JSudokuViewer extends JComponent {
 		}
 	}
 
+	/**
+	 * Draws the frame of the sudoku.
+	 * @param g
+	 * the graphics to draw on.
+	 * @param p
+	 * The position on the canvas to start drawing.
+	 */
 	private void drawFrame(Graphics2D g, Point p) {
 		g.setColor(Color.white);
 		g.fillRect(p.x, p.y, puzzleDim, puzzleDim);

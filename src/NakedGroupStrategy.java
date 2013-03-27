@@ -1,25 +1,18 @@
-/*
- * NakedGroupStrategy.java
- * Strategy that ...
- * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
- * 
- */
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Strategy that removes finds groups of cells that contain the same possibilities,
+ * and no others. For example two cells that can only hold a 3 or a 4. These possibilities
+ * can be removed from all other cells in the container. The strategy only looks for groups
+ * of 2 and 3 cells.
+ * 
+ * @version 1.0
+ * @author Jouke van der Maas & Koen Keune
+ * 
+ */
 public class NakedGroupStrategy implements Strategy {
 
-	// When two cells have exactly two the same possibilities, remove those as
-	// possibilities everywhere else.
 	@Override
 	public boolean removePossibilities(Sudoku puzzle) throws SudokuException,
 			InvalidSudokuException {
@@ -30,7 +23,8 @@ public class NakedGroupStrategy implements Strategy {
 				result = true;
 			}
 		}
-
+		
+		// only do 3 cells if no result from doing 2
 		if (!result) {
 			for (CellContainer container : puzzle.getAllContainers()) {
 				if (findNakedGroups(3, container)) {
@@ -47,6 +41,9 @@ public class NakedGroupStrategy implements Strategy {
 		List<Cell> cells = findNPossibilityCells(container, n);
 		if (cells.size() < n)
 			return false;
+		// Each cell with the same possibilities that is found
+		// will be added to this list. The number of elements in the
+		// list determines if we've found a group.
 		List<Cell> found = new ArrayList<Cell>();
 
 		for (int i = cells.size() - 1; i >= 0; i--) {
@@ -58,6 +55,8 @@ public class NakedGroupStrategy implements Strategy {
 					continue;
 				Cell c2 = cells.get(j);
 
+				// findNPossibilityCells guarantees c1 and c2 have the same
+				// number of possibilities.
 				if (c1.getPossibilities().containsAll(c2.getPossibilities())) {
 					found.add(c2);
 				}

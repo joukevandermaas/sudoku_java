@@ -1,20 +1,13 @@
-/*
- * OneOfEachStrategy.java
+import java.util.Set;
+
+/**
  * Removes possibilities in a cell by looking at remaining possibilities in 
  * rows, columns and squares.
  * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
+ * @version 1.0
+ * @author Jouke van der Maas & Koen Keune
  * 
  */
-import java.util.Set;
-
 public class OneOfEachStrategy implements Strategy {
 
 	@Override

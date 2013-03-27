@@ -1,22 +1,14 @@
-/*
- * LockedStrategy.java
+import java.util.List;
+
+/**
  * Searches for 2 or 3 possibilities in a column that are the same and don't 
  * occur in another place in the square if so remove those possibilities on 
  * every other place on the same column.
  * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
+ * @version 1.0
+ * @author Jouke van der Maas & Koen Keune
  * 
  */
-
-import java.util.List;
-
 public class LockedStrategy implements Strategy {
 
 	@Override
@@ -28,6 +20,7 @@ public class LockedStrategy implements Strategy {
 		for (int i = 0; i < squares.length; i++) {
 			SquareCellContainer square = (SquareCellContainer) squares[i];
 
+			// repeat for each number
 			for (int n = 1; n <= Sudoku.SUDOKU_SIZE; n++) {
 				List<Integer> rows = square.findActivatedRows(n);
 				List<Integer> cols = square.findActivatedColumns(n);
@@ -70,9 +63,8 @@ public class LockedStrategy implements Strategy {
 
 	protected int getRealCol(int square, int colInSquare)
 			throws SudokuException {
-		int squaresPerRow = Sudoku.SUDOKU_SIZE / Sudoku.SQUARE_COLUMNS; // always
-																		// an
-																		// int
+		// squaresPerRow is always an int (no rounding is done).
+		int squaresPerRow = Sudoku.SUDOKU_SIZE / Sudoku.SQUARE_COLUMNS;
 		int col = (square % squaresPerRow) * Sudoku.SQUARE_COLUMNS
 				+ colInSquare;
 

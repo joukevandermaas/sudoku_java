@@ -1,18 +1,10 @@
-/*
- * SudokuException.java
+/**
  * This exception should be thrown when an invalid operation is attempted on a Sudoku object.
  * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
+ * @version 1.0
+ * @author Jouke van der Maas & Koen Keune
  * 
  */
-
 public class SudokuException extends Exception {
 	private static final long serialVersionUID = -152735031103016681L;
 

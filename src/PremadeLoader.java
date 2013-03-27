@@ -1,22 +1,16 @@
-/*
- * Loader.java
- * Loads the sudoku files from datastructuren site
- * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
- * 
- */
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+/**
+ * Loads premade sudoku files, where empty spots are denoted by a 0
+ * and each sudoku takes up one line (numbers are read from left to right,
+ * top to bottom).
+ * 
+ * @version 1.0
+ * @author Jouke van der Maas & Koen Keune
+ * 
+ */
 public class PremadeLoader extends Loader {
 
 	public PremadeLoader(BufferedReader file) throws FileNotFoundException {

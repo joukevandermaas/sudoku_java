@@ -1,24 +1,16 @@
-/*
- * CellContainer.java
- * Contains 'sudoku' long size cells, for instance: square, row and column are 
- * CellContainers. Has methods to get all the Cells of the container and
- * values of the Cells in the Container.
- * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
- * 
- */
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Contains 'sudoku' long size cells, for instance: square, row and column are 
+ * CellContainers. Has methods to get all the Cells of the container and
+ * values of the Cells in the Container.
+ * 
+ * @version 1.0
+ * @author Jouke van der Maas & Koen Keune
+ * 
+ */
 public class CellContainer {
 	private Cell[] cells;
 

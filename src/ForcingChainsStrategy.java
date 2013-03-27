@@ -1,31 +1,27 @@
-/*
- * ForcingChainsStrategy.java
- * Looks at the consequences of filling the possibilities of a cell with two
- * possibilities, removes a possibility if that possibility will be removed in
- * both cases. Since it search for cells with two possibilities and then tries 
- * to infer a removal it has a high complexity and very time consuming. Because
- * of that the depth for inferring a removal is limited.
- * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
- * 
- */
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Looks at the consequences of filling the possibilities of a cell with two
+ * possibilities. If both chains lead to the same value for a cell, all other
+ * possibilities in that cell are removed. Since it search for cells with two 
+ * possibilities and then tries to infer a value it has a high complexity and is 
+ * very time consuming. Because of that the depth for inferring a removal is limited.
+ * 
+ * @version 1.0
+ * @author Jouke van der Maas & Koen Keune
+ * 
+ */
 public class ForcingChainsStrategy implements Strategy {
 	// Don't allow too many levels of recursion or the solver
 	// will get very slow.
 	private static int maxLevel = 4;
 	private static int currentLevel = 0;
 
+	/**
+	 * Sets the maximum depth of using this strategy.
+	 * @param depth
+	 */
 	public static void setMaxDepth(int depth) {
 		maxLevel = depth;
 	}

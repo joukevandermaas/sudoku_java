@@ -1,35 +1,16 @@
-/*
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import javax.swing.*;
+
+/**
  * SudokuSolver.java
  * Solves all given sudokus and prints the progress (since it can take a 
  * while), number of puzzles, percentage solved, invalid puzzles, time total 
  * and per puzzle.
  * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
- * 
- */
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import javax.swing.*;
-
-/**
- * Main class of the solver. Syntax:
- * java SudokuSolver filename [-b] [max depth]
- * 
- * where -b starts the program in batch mode and max
- * depth varies the maximum depth of the forcing chains
- * strategy.
- * 
+ * @version 1.0
  * @author Jouke van der Maas & Koen Keune
- *
+ * 
  */
 public class SudokuSolver {
 
@@ -136,10 +117,15 @@ public class SudokuSolver {
 		System.out.printf("\n\nPuzzles: %d\nSolved: %d (%.1f%%)\nInvalid puzzles: %d\nTime: %.2fs (%.2fms average per puzzle)\n\n", 
 				puzzles, solved, (double)solved/puzzles * 100, invalid, (double)totalTime/1000, (double)totalTime/puzzles);
 		
-		System.exit(0);
-		
+		System.exit(0);	
 	}
 	
+	/**
+	 * Prints the specified message to stderr and exits the program.
+	 * 
+	 * @param message
+	 * The message to print.
+	 */
 	private static void errorExit(String message) {
 		System.err.println("\n" + message);
 		System.exit(1);

@@ -1,28 +1,20 @@
-/*
- * DoubleLockedStrategy.java
- * Searches for possibilities that occurs in one row (or column) in a square
+import java.util.List;
+
+/**
+ * Searches for possibilities that occur in one row (or column) in a square
  * and another row (or column) in another square so that blocks possibilities
  * in those rows (or columns) in the third square.
  * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
+ * @version 1.0
+ * @author Jouke van der Maas & Koen Keune
  * 
  */
-
-import java.util.List;
-
 public class DoubleLockedStrategy extends LockedStrategy {
 
 	@Override
 	public boolean removePossibilities(Sudoku puzzle) throws SudokuException {
 		CellContainer[] squares = puzzle.getSquares();
-		// boolean result = false;
+
 		for (int i = 0; i < squares.length; i++) { // for every square
 			SquareCellContainer square = (SquareCellContainer) squares[i];
 
@@ -40,7 +32,7 @@ public class DoubleLockedStrategy extends LockedStrategy {
 							if (removePossibilities(row, n, startCol, startCol
 									+ Sudoku.SQUARE_ROWS, startCol2, startCol2
 									+ Sudoku.SQUARE_ROWS))
-								return true; // or result = true
+								return true;
 						}
 					}
 				}
@@ -55,13 +47,13 @@ public class DoubleLockedStrategy extends LockedStrategy {
 							if (removePossibilities(row, n, startRow, startRow
 									+ Sudoku.SQUARE_ROWS, startRow2, startRow2
 									+ Sudoku.SQUARE_ROWS))
-								return true; // or result = true
+								return true;
 						}
 					}
 				}
 			}
 		}
-		return false; // or return result
+		return false;
 	}
 
 	// double bound version

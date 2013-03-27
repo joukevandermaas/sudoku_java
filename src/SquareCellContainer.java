@@ -1,35 +1,57 @@
-/*
- * SquareCellContainer.java
- * Can find which rows or columns in a square have a certain value
- * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
- * 
- */
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a n x n square in a sudoku.
+ * 
+ * @version 1.0
+ * @author Jouke van der Maas & Koen Keune
+ * 
+ */
 public class SquareCellContainer extends CellContainer {
 
+	/**
+	 * Initialises the cell container.
+	 * @param cells
+	 * The cells in this container, from left to right, top to bottom.
+	 * @throws SudokuException
+	 */
 	public SquareCellContainer(Cell[] cells) throws SudokuException {
 		super(cells);
 	}
 
+	/**
+	 * Finds the rows (within the square) that have the specified value.
+	 * @param value
+	 * The value to look for.
+	 * @return
+	 * A list of indices within the square (i.e. if the square has three
+	 * rows, the maximum value in this list is 2).
+	 */
 	public List<Integer> findActivatedRows(int value) {
 		return findActivatedRowsAndCols(value).get(0);
 	}
 
+	/**
+	 * Finds the columns (within the square) that have the specified value.
+	 * @param value
+	 * The value to look for.
+	 * @return
+	 * A list of indices within the square (i.e. if the square has three
+	 * columns, the maximum value in this list is 2).
+	 */
 	public List<Integer> findActivatedColumns(int value) {
 		return findActivatedRowsAndCols(value).get(1);
 	}
 
+	/**
+	 * Finds the rows and columns (within the square) that have the specified value.
+	 * @param value
+	 * The value to look for.
+	 * @return
+	 * A list lists of indices within the square (i.e. if the square has three
+	 * rows and columns, the maximum value in each list is 2).
+	 */
 	private List<List<Integer>> findActivatedRowsAndCols(int value) {
 		Cell[] cells = this.getCells();
 		List<Integer> rows = new ArrayList<Integer>();

@@ -1,21 +1,13 @@
-/*
- * Solver.java
+import java.util.*;
+
+/**
  * This class attempts to solve a sudoku puzzle using various Strategy-
  * implementations in increasing complexity.
  * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
+ * @version 1.0
+ * @author Jouke van der Maas & Koen Keune
  * 
  */
-
-import java.util.*;
-
 public class Solver {
 	private Sudoku sudoku;
 	private Strategy[] strategies = { new OneOfEachStrategy(),
@@ -23,6 +15,15 @@ public class Solver {
 			new NakedGroupStrategy(), new HiddenTwinStrategy(),
 			new ForcingChainsStrategy() };
 
+	/**
+	 * Initializes the solver and fixes the possibilities in the sudoku.
+	 * @param puzzle
+	 * The puzzle to solve.
+	 *
+	 * @throws InvalidSudokuException
+	 * When the specified sudoku is invalid. This exception is not
+	 * always thrown even if the sudoku is invalid.
+	 */
 	public Solver(Sudoku puzzle) throws SudokuException, InvalidSudokuException {
 		this.sudoku = puzzle;
 
@@ -31,14 +32,39 @@ public class Solver {
 		strategies[0].removePossibilities(sudoku);
 	}
 
-	// Solves the sudoku. Returns when the sudoku is solved,
-	// or when no more steps could be taken (ie. the sudoku is
-	// invalid or it was too hard).
+	/**
+	 * Solves the sudoku. Returns when the sudoku is solved, or when
+	 * no more solving steps could be taken (i.e. the sudoku is invalid
+	 * or it was too hard).
+	 * 
+	 * @throws SudokuException
+	 * When an illegal operation was attempted.
+	 * @throws InvalidSudokuException
+	 * When the sudoku is invalid. This exception is only thrown if the
+	 * invalid state was reached (i.e. if the solver could solve it to that
+	 * point).
+	 */
 	public void solve() throws SudokuException, InvalidSudokuException {
 		while (takeStep() && !sudoku.isSolved())
 			;
 	}
 
+	/**
+	 * Takes a single solving step. A step consists of two stages:
+	 * 1. Filling in numbers in cells where the value is known
+	 * 2. Removing possibilities using various strategies.
+	 * 
+	 * Whenever an easier strategy works, more complex strategies
+	 * are not attempted. This means easier sudokus are faster to
+	 * solve.
+	 * @return
+	 * True if progress was made, false otherwise.
+	 * @throws InvalidSudokuException
+	 * When two cells in the same container have the same value, or
+	 * when an empty cell has no possibilities left.
+	 * @throws SudokuException
+	 * When an invalid operation is attempted.
+	 */
 	public boolean takeStep() throws InvalidSudokuException, SudokuException {
 		boolean madeProgress = false;
 
@@ -57,30 +83,43 @@ public class Solver {
 		return madeProgress;
 	}
 
-	// returns the sudoku this Solver is solving
-	public Sudoku getSudoku() {
-		return sudoku;
-	}
-
-	// Enters only one value, because possibilities change whenever a
-	// number is entered. The possibilities should be updated before more
-	// numbers
-	// are entered.
+	/**
+	 * Enters one or more values in cells where they are known.
+	 * @return
+	 * true if a value could be entered, false otherwise.
+	 * @throws SudokuException
+	 * When an invalid operation is attempted.
+	 */
 	private boolean enterValue() throws SudokuException {
 		boolean result = false;
+		
+		// all single-possibility cells can safely be 
+		// filled in together, as filling one in doesn't
+		// cause any new ones to exist.
 		for (CellContainer c : sudoku.getSquares()) {
 			if (enterSingles(c))
 				result = true;
 		}
 
+		// Filling in a number because it was the only possibility
+		// in that container can cause new ones to exist, so here
+		// only one can be entered at a time.
 		if (!result)
 			for (CellContainer c : sudoku.getAllContainers())
 				if (enterHiddenSingle(c))
 					return true;
+		
 		return result;
 	}
 
-	// if there is one possibility left then that will be the value
+	/**
+	 * Enters values where a cell has only one possibility.
+	 * @param container
+	 * The container to search.
+	 * @return
+	 * True if a value was entered, false otherwise.
+	 * @throws SudokuException
+	 */
 	private boolean enterSingles(CellContainer container)
 			throws SudokuException {
 		boolean result = false;
@@ -94,7 +133,15 @@ public class Solver {
 		return result;
 	}
 
-	// if a possible value can go in only one spot then that will be the value
+	/**
+	 * Enters a value if that value can go in only one spot in the container,
+	 * even if other numbers can go in that same spot.
+	 * @param container
+	 * The container to search.
+	 * @return
+	 * True if a value was entered, false otherwise.
+	 * @throws SudokuException
+	 */
 	private boolean enterHiddenSingle(CellContainer container)
 			throws SudokuException {
 		List<ArrayList<Cell>> values = new ArrayList<ArrayList<Cell>>();

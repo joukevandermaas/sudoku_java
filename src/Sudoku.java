@@ -1,22 +1,24 @@
-/*
- * Sudoku.java
+/**
  * Representation of a sudoku puzzle. The represented sudoku is
  * not necessarily valid or correct (it is not verified).
  * 
- * Version information
- * v1
- *
- * Date
- * 27/03/2013
- * 
- * Author
- * Jouke van der Maas & Koen Keune
+ * @version 1.0
+ * @author Jouke van der Maas & Koen Keune
  * 
  */
 
 public class Sudoku {
+	/**
+	 * The number of cells in each row/column/square.
+	 */
 	public final static int SUDOKU_SIZE = 9;
+	/**
+	 * The number of rows per square.
+	 */
 	public final static int SQUARE_ROWS = 3;
+	/**
+	 * The number of columns per square.
+	 */
 	public final static int SQUARE_COLUMNS = 3;
 
 	private CellContainer[] rows = new CellContainer[SUDOKU_SIZE];
@@ -24,6 +26,15 @@ public class Sudoku {
 	private CellContainer[] squares = new CellContainer[SUDOKU_SIZE];
 	private CellContainer[] all = new CellContainer[SUDOKU_SIZE * 3];
 
+	/**
+	 * Initializes the Sudoku based on the provided array representation.
+	 * @param values
+	 * Jagged array where the first index specifies the row and the second
+	 * specifies the column of each value.
+	 * 
+	 * @throws SudokuException
+	 * When the array contains invalid values.
+	 */
 	public Sudoku(int[][] values) throws SudokuException {
 		Cell[][] rows = new Cell[SUDOKU_SIZE][SUDOKU_SIZE];
 		Cell[][] columns = new Cell[SUDOKU_SIZE][SUDOKU_SIZE];
@@ -59,28 +70,52 @@ public class Sudoku {
 
 	}
 
+	/**
+	 * Returns an array containing all the rows in the sudoku.
+	 */
 	public CellContainer[] getRows() {
 		return rows;
 	}
 
+	/**
+	 * Returns an array containing all the columns in the sudoku.
+	 */
 	public CellContainer[] getColumns() {
 		return columns;
 	}
 
+	/**
+	 * Returns an array containing all the squares in the sudoku.
+	 */
 	public CellContainer[] getSquares() {
 		return squares;
 	}
 
-	// Returns a combination of rows, columns and squares. There
-	// is overlap between the cells in these CellContainers
+	/**
+	 * Returns an array containing all the rows, columns and squares in 
+	 * the sudoku. There is overlap in the cells (each cell is in here
+	 * three times).
+	 */
 	public CellContainer[] getAllContainers() {
 		return all;
 	}
 
+	/**
+	 * Returns the cell at the specified location.
+	 * @param row
+	 * The row of this cell.
+	 * @param column
+	 * The column of this cell.
+	 */
 	public Cell getCell(int row, int column) {
 		return rows[row].getCells()[column];
 	}
 
+	/**
+	 * Returns a jagged int array that contains all the values
+	 * in the sudoku. Possibilities are ignored.
+	 *
+	 */
 	public int[][] toIntArray() throws SudokuException {
 		int[][] values = new int[SUDOKU_SIZE][SUDOKU_SIZE];
 
@@ -94,15 +129,18 @@ public class Sudoku {
 		return values;
 	}
 
+	/**
+	 * Returns true if the sudoku is solved, false otherwise.
+
+	 * @throws SudokuException
+	 */
 	public boolean isSolved() throws SudokuException {
-		boolean isSolved = true;
 		for (CellContainer c : rows) {
 			if (!c.isSolved()) {
-				isSolved = false;
-				break;
+				return false;
 			}
 		}
 
-		return isSolved;
+		return true;
 	}
 }
