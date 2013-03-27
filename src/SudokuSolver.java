@@ -3,9 +3,24 @@ import java.io.IOException;
 
 import javax.swing.*;
 
-
+/**
+ * Main class of the solver. Syntax:
+ * java SudokuSolver filename [-b] [max depth]
+ * 
+ * where -b starts the program in batch mode and max
+ * depth varies the maximum depth of the forcing chains
+ * strategy.
+ * 
+ * @author Jouke van der Maas & Koen Keune
+ *
+ */
 public class SudokuSolver {
 
+	/**
+	 * Main method of the application. Initiates the gui or
+	 * batch mode.
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		String filename = "";
 		int depth = 4;
@@ -50,6 +65,13 @@ public class SudokuSolver {
 
 	}
 
+	/**
+	 * Executes batch mode, where the entire file is solved and statistics
+	 * are reported to the command line.
+	 * 
+	 * @param loader
+	 * Loader to read the sudokus from the specified file.
+	 */
 	private static void executeBatchMode(Loader loader) {
 		System.out.println("Starting batchmode\nThis might take a while.");
 		
@@ -84,7 +106,6 @@ public class SudokuSolver {
 					// count as not solved
 				}
 				puzzle = loader.getNext();
-				//break;
 			}
 		} catch (SudokuReaderException e) {
 			errorExit("Invalid file.");
