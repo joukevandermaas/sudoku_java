@@ -4,10 +4,10 @@
  * (the possible values for that cell).
  * 
  * Version information
- * v0.2 (alpha 1)
+ * v1
  *
  * Date
- * 15/03/2013
+ * 27/03/2013
  * 
  * Author
  * Jouke van der Maas & Koen Keune

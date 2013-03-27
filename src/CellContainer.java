@@ -1,14 +1,14 @@
 /*
  * CellContainer.java
- * Contains sudoku size cells, for instance: square, row and column are 
+ * Contains 'sudoku' long size cells, for instance: square, row and column are 
  * CellContainers. Has methods to get all the Cells of the container and
  * values of the Cells in the Container.
  * 
  * Version information
- * v0.2 (alpha 1)
+ * v1
  *
  * Date
- * 15/03/2013
+ * 27/03/2013
  * 
  * Author
  * Jouke van der Maas & Koen Keune
@@ -34,8 +34,9 @@ public class CellContainer {
 
 		for (Cell c : cells) {
 			if (c.hasValue()) {
-				if(!values.add(c.getValue()))
-					throw new InvalidSudokuException("Double values are not allowed.");
+				if (!values.add(c.getValue()))
+					throw new InvalidSudokuException(
+							"Double values are not allowed.");
 			}
 		}
 
@@ -46,7 +47,6 @@ public class CellContainer {
 		return cells;
 	}
 
-	
 	public boolean isSolved() throws SudokuException {
 		return getValues().size() == cells.length;
 	}

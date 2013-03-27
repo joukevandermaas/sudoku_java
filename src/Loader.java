@@ -4,10 +4,10 @@
  * value is a number
  * 
  * Version information
- * v0.2 (alpha 1)
+ * v1
  *
  * Date
- * 15/03/2013
+ * 27/03/2013
  * 
  * Author
  * Jouke van der Maas & Koen Keune
@@ -26,20 +26,24 @@ import java.nio.charset.Charset;
 public abstract class Loader implements Closeable {
 
 	protected BufferedReader file;
-	
-	public static Loader loadGeneratedFile(String filename) throws FileNotFoundException {
-		return new GeneratedLoader(new BufferedReader(new InputStreamReader(new FileInputStream(filename), Charset.forName("UTF-16"))));
+
+	public static Loader loadGeneratedFile(String filename)
+			throws FileNotFoundException {
+		return new GeneratedLoader(new BufferedReader(new InputStreamReader(
+				new FileInputStream(filename), Charset.forName("UTF-16"))));
 	}
-	public static Loader loadPremadeFile(String filename) throws FileNotFoundException {
+
+	public static Loader loadPremadeFile(String filename)
+			throws FileNotFoundException {
 		return new PremadeLoader(new BufferedReader(new FileReader(filename)));
 	}
-	
+
 	public Loader(BufferedReader file) throws FileNotFoundException {
 		this.file = file;
 	}
-	
+
 	public abstract int[][] getNext() throws SudokuReaderException, IOException;
-	
+
 	@Override
 	public void close() throws IOException {
 		file.close();

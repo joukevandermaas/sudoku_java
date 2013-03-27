@@ -1,3 +1,20 @@
+/*
+ * SudokuSolver.java
+ * Solves all given sudokus and prints the progress (since it can take a 
+ * while), number of puzzles, percentage solved, invalid puzzles, time total 
+ * and per puzzle.
+ * 
+ * Version information
+ * v1
+ *
+ * Date
+ * 27/03/2013
+ * 
+ * Author
+ * Jouke van der Maas & Koen Keune
+ * 
+ */
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 

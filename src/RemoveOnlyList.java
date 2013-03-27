@@ -5,10 +5,10 @@
  * be thrown if these operations are attempted.
  * 
  * Version information
- * v0.2 (alpha 1)
+ * v1
  *
  * Date
- * 15/03/2013
+ * 27/03/2013
  * 
  * Author
  * Jouke van der Maas & Koen Keune
@@ -23,17 +23,17 @@ import java.util.ListIterator;
 
 public class RemoveOnlyList<T> implements List<T> {
 	private ArrayList<T> list;
-	
+
 	public RemoveOnlyList(T[] values) {
 		list = new ArrayList<T>();
-		for(T i : values)
+		for (T i : values)
 			list.add(i);
 	}
-	
+
 	public String toString() {
 		return list.toString();
 	}
-	
+
 	@Override
 	public boolean add(T arg0) {
 		return false;

@@ -5,10 +5,10 @@
  * solution to the last sudoku in the file.
  * 
  * Version information
- * v0.2 (alpha 1)
+ * v1
  *
  * Date
- * 15/03/2013
+ * 27/03/2013
  * 
  * Author
  * Jouke van der Maas & Koen Keune
@@ -22,7 +22,6 @@ import java.io.IOException;
 
 import javax.swing.*;
 
-
 public class SudokuPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 3028028885712932036L;
 	private ButtonGroup numberGroup;
@@ -33,64 +32,64 @@ public class SudokuPanel extends JPanel implements ActionListener {
 
 	public SudokuPanel(Loader puzzleLoader) {
 		super();
-		
-		this.loader = puzzleLoader;
-		
-		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        viewer = new JSudokuViewer();
-        viewer.setPuzzle(puzzle);
-        viewer.setAlignmentX(Component.CENTER_ALIGNMENT);
-        viewer.setAlignmentY(Component.CENTER_ALIGNMENT);
-               
-        add(Box.createRigidArea(new Dimension(30, 30)));
-        add(viewer);
-        
-        JPanel controls = new JPanel();
-        JPanel numberButtons = new JPanel();
-        
-        controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
-        numberButtons.setLayout(new BoxLayout(numberButtons, BoxLayout.Y_AXIS));
-        
-        numberGroup = new ButtonGroup();
-        for(int i = 1; i <= Sudoku.SUDOKU_SIZE; i++) {
-        	JToggleButton b = new JToggleButton(Integer.toString(i));
-        	b.putClientProperty("value", i);
-        	numberGroup.add(b);
-        	b.addActionListener(this);
-        	numberButtons.add(b);
-        }
-        
-        JButton next = new JButton("Next puzzle");
-        next.addActionListener(this);
-        next.putClientProperty("type", 0);
-        JButton solveStep = new JButton("Take step");
-        solveStep.putClientProperty("type", 3);
-        solveStep.addActionListener(this);
-        JButton solve = new JButton("Solve puzzle");
-        solve.putClientProperty("type", 1);
-        solve.addActionListener(this);
-        JButton solveAll = new JButton("Solve all");
-        solveAll.setToolTipText("Solves all puzzles until an unsolvable puzzle is encountered.");
-        solveAll.putClientProperty("type", 2);
-        solveAll.addActionListener(this);
-        
-        controls.add(numberButtons);
-        controls.add(Box.createVerticalStrut(20));
-        controls.add(next);
-        controls.add(Box.createVerticalStrut(10));
-        controls.add(solveStep);
-        controls.add(solve);
-        controls.add(solveAll);
 
-        add(controls);
-        
-        try {
+		this.loader = puzzleLoader;
+
+		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		viewer = new JSudokuViewer();
+		viewer.setPuzzle(puzzle);
+		viewer.setAlignmentX(Component.CENTER_ALIGNMENT);
+		viewer.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+		add(Box.createRigidArea(new Dimension(30, 30)));
+		add(viewer);
+
+		JPanel controls = new JPanel();
+		JPanel numberButtons = new JPanel();
+
+		controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
+		numberButtons.setLayout(new BoxLayout(numberButtons, BoxLayout.Y_AXIS));
+
+		numberGroup = new ButtonGroup();
+		for (int i = 1; i <= Sudoku.SUDOKU_SIZE; i++) {
+			JToggleButton b = new JToggleButton(Integer.toString(i));
+			b.putClientProperty("value", i);
+			numberGroup.add(b);
+			b.addActionListener(this);
+			numberButtons.add(b);
+		}
+
+		JButton next = new JButton("Next puzzle");
+		next.addActionListener(this);
+		next.putClientProperty("type", 0);
+		JButton solveStep = new JButton("Take step");
+		solveStep.putClientProperty("type", 3);
+		solveStep.addActionListener(this);
+		JButton solve = new JButton("Solve puzzle");
+		solve.putClientProperty("type", 1);
+		solve.addActionListener(this);
+		JButton solveAll = new JButton("Solve all");
+		solveAll.setToolTipText("Solves all puzzles until an unsolvable puzzle is encountered.");
+		solveAll.putClientProperty("type", 2);
+		solveAll.addActionListener(this);
+
+		controls.add(numberButtons);
+		controls.add(Box.createVerticalStrut(20));
+		controls.add(next);
+		controls.add(Box.createVerticalStrut(10));
+		controls.add(solveStep);
+		controls.add(solve);
+		controls.add(solveAll);
+
+		add(controls);
+
+		try {
 			loadSudoku();
 		} catch (SudokuException e) {
 			showError("Couldn't load sudoku.");
 		}
 	}
-	
+
 	// loads and solves as many sudokus as possible from
 	// sudokus.txt and sets the final solved or unsolved sudoku to this.puzzle
 	private boolean loadSudoku() throws SudokuException {
@@ -99,7 +98,7 @@ public class SudokuPanel extends JPanel implements ActionListener {
 			loadedSudoku = loader.getNext();
 
 			System.out.println();
-			if(loadedSudoku != null) {
+			if (loadedSudoku != null) {
 				puzzle = new Sudoku(loadedSudoku);
 				solver = new Solver(this.puzzle);
 				viewer.setPuzzle(puzzle);
@@ -119,28 +118,28 @@ public class SudokuPanel extends JPanel implements ActionListener {
 	// handles the button presses
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() instanceof JToggleButton) {
+		if (e.getSource() instanceof JToggleButton) {
 			JToggleButton b = (JToggleButton) e.getSource();
-			int value = (Integer)b.getClientProperty("value");
-			
-			if(b.isSelected()) {
+			int value = (Integer) b.getClientProperty("value");
+
+			if (b.isSelected()) {
 				viewer.setSpecial(value);
 			}
-		} else if(e.getSource() instanceof JButton) {
+		} else if (e.getSource() instanceof JButton) {
 			JButton action = (JButton) e.getSource();
 			try {
-				switch((Integer)action.getClientProperty("type")) {
+				switch ((Integer) action.getClientProperty("type")) {
 				case 0: // next
-					if(!loadSudoku())
+					if (!loadSudoku())
 						action.setEnabled(false);
 					break;
 				case 1: // solve 1
 					solver.solve();
 					break;
 				case 2: // solve all
-					while(loadSudoku()) {
+					while (loadSudoku()) {
 						solver.solve();
-						if(!puzzle.isSolved())
+						if (!puzzle.isSolved())
 							break;
 					}
 					break;
@@ -148,45 +147,19 @@ public class SudokuPanel extends JPanel implements ActionListener {
 					solver.takeStep();
 				}
 
-			} catch(InvalidSudokuException ex) {
+			} catch (InvalidSudokuException ex) {
 				showError("Invalid sudoku");
 			} catch (SudokuException ex) {
 				showError("Solver encountered a problem.");
 			}
 		}
-		
+
 		viewer.repaint();
 	}
-	
+
 	private void showError(String message) {
-		JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(null, message, "Error",
+				JOptionPane.ERROR_MESSAGE);
 	}
-	
-	
-	
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

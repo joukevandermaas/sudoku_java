@@ -1,12 +1,14 @@
 /*
  * DoubleLockedStrategy.java
- * Werkt voor 1 geval, weet niet of 'col if' werkt
+ * Searches for possibilities that occurs in one row (or column) in a square
+ * and another row (or column) in another square so that blocks possibilities
+ * in those rows (or columns) in the third square.
  * 
  * Version information
- * v0.2 (alpha 1)
+ * v1
  *
  * Date
- * 18/03/2013
+ * 27/03/2013
  * 
  * Author
  * Jouke van der Maas & Koen Keune
