@@ -1,0 +1,184 @@
+\documentclass[11pt, a4paper, fleqn]{article}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                   BEGIN BS                  %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{color}
+\usepackage{parskip}
+\usepackage{listings}
+\usepackage{scrextend}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{class}{rgb}{0,.25,.53}
+\definecolor{method}{rgb}{.1,.46,.99}
+
+\lstset{ %
+language=Java,                % choose the language of the code
+basicstyle=\footnotesize\ttfamily,       % the size of the fonts that are used for the code
+numbers=left,                   % where to put the line-numbers
+numberstyle=\tiny\color{gray},      % the size of the fonts that are used for the line-numbers
+stepnumber=1,    
+firstnumber=1,
+numberfirstline=true                   % the step between two line-numbers. If it is 1 each line will be numbered
+numbersep=5pt,                  % how far the line-numbers are from the code
+backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+showspaces=false,               % show spaces adding particular underscores
+showstringspaces=false,         % underline spaces within strings
+showtabs=false,                 % show tabs within strings adding particular underscores
+tabsize=2,          % sets default tabsize to 2 spaces
+captionpos=b,           % sets the caption-position to bottom
+breaklines=true,        % sets automatic line breaking
+breakatwhitespace=false,    % sets if automatic breaks should only happen at whitespace
+ keywordstyle=\color{blue},          % keyword style
+  commentstyle=\color{dkgreen},       % comment style
+  stringstyle=\color{mauve},         % string literal style
+  morekeywords={switch, case}
+}
+
+%\usepackage[demo]{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage[bitstream-charter]{mathdesign}
+\renewcommand{\ttdefault}{pcr}
+\renewcommand{\sfdefault}{\familydefault}
+\newcommand{\class}[1]{{\color{class}\textbf{\lstinline{#1}}}}
+\newcommand{\method}[3]{%
+\lstinline{#1\ }%
+{\color{method}\textit{\lstinline{#2}}}%
+\lstinline{(#3)}%
+}
+\newcommand{\java}[1]{\lstinline{#1}}
+
+\newcommand{\pic}[3]{
+\begin{figure}[htb]
+\centering
+\includegraphics[scale=.6]{#1}
+\caption{#3}
+\label{fig-#2}
+\end{figure}
+}
+\usepackage{hyperref}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                   EIND BS                   %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{Design and Style Guide}
+\author{Jouke van der Maas \& Koen Keune}
+
+\begin{document}
+\maketitle
+
+\section{Overview}
+During this project, a sudoku solver is implemented. Only
+logical solving strategies are used; there are no brute-force methods.\
+The underlying principle to the solve method is that once
+possible numbers have been calculated for each square, they can only be removed.
+Removal of possible numbers is achieved by a strategy.
+By trying strategies repeatedly, one of two states can always be achieved. From these
+states, a new number can be entered and the process can repeat.
+
+\subsection{End-states}
+The first end-state from which a new number can be entered is the 
+\emph{Single Possibility rule}. This rule states that if a given cell has only one
+possible number, that number should be entered. The second end-state is the \emph{%
+Only Square rule}. This rule states that if a given number can be entered in only one
+cell within a container (row, column or square), that number should be entered. All
+other strategies implemented for the project only remove possibilities from cells, leading
+to one of these two end-states.
+
+\section{Usage}
+\subsection{SudokuApp}
+
+\section{Implementation}
+\subsection{Important types}
+The class \class{Sudoku} represents the puzzle. It holds \class{CellContainer}s that holds
+the individual \class{Cell}s. A \class{CellContainer} can either be a row, column or square
+within the sudoku. These can be represented using only one type, because their behaviour is
+exactly the same. The \class{Cell} class represents cells within the sudoku. This class can
+be in exactly one of two states; it can have a value or it can have a list of possible values.
+These two states were not separated in two subclasses of an abstract class for simplicities sake.
+
+The \class{Sudoku} is used by the class \class{Solver}. This class takes a \class{Sudoku} and solves it.
+It uses implementations of the interface \class{Strategy}. This interface defines a strategy for
+removing possibilities from cells, leading to one of the two end-states.
+
+\subsection{Important methods}
+\subsubsection{Sudoku}
+\begin{itemize}
+\item \method{}{Sudoku}{int[][]}\\
+The constructor takes a puzzle represented as a jagged array of ints (\java{int[][]}).
+
+\item \method{CellContainer[]}{getRows}{}\\
+      \method{CellContainer[]}{getColumns}{}\\
+      \method{CellContainer[]}{getSquares}{}\\
+      \method{CellContainer[]}{getAllContainers}{}\\
+These methods return the rows, columns and/or squares ordered from left to right, top to bottom.
+The return values are arrays because the number of containers never changes.
+\end{itemize}
+\subsubsection{CellContainer}
+\begin{itemize}
+\item \method{List<Integer>}{getValues}{}\\
+Returns a list of all values that have already been entered in this
+\\\class{CellContainer}.
+\item \method{Cell[]}{getCells}{}\\
+Returns an array containing the cells in this container. This is an array because the number
+of cells never changes.
+\end{itemize}
+\subsubsection{Cell}
+\begin{itemize}
+\item \method{List<Integer>}{getPossibilities}{}\\
+Returns a list containing all possibilities for this cell. Throws a \class{SudokuException} if
+the cell has a value.
+\item \method{boolean}{hasValue}{}\\
+Returns \java{true} if this cell has a value, false otherwise.
+\item \method{boolean}{removePossibility}{int}\\
+      \method{boolean}{removePossibilities}{Collection<Integer>}\\
+These methods remove one or more possible numbers from the list of possibilities. Throws a
+\class{SudokuException} if the cell has a value. Returns \java{true} if the possibilities were removed,
+\java{false} otherwise.
+\item \method{int}{getValue}{}\\
+Returns the value if there is one. Throws a \class{SudokuException} if there is not.
+\item \method{void}{setValue}{int}\\
+Changes the state of the cell from not having a value to having a value. Throws a \class{SudokuException}
+if the cell already had a value.
+\end{itemize}
+\subsubsection{Strategy}
+\begin{itemize}
+\item \method{boolean}{removePossibilities}{Sudoku}\\
+Removes one or more possibilities from the cells in the provided sudoku. Returns \java{true} if
+possibilities were removed, \java{false} otherwise.
+\end{itemize}
+\subsubsection{Solver}
+\begin{itemize}
+\item \method{void}{solve}{}\\
+Solves the sudoku provided in the constructor. The method loops over an array of \class{Strategy}
+implementations, calling each one on the sudoku. If a possibility was removed, it tries to fill
+in a number and starts again from the top of the list. The list is ordered so cheaper (in terms of
+time) strategies are at the top. This means that more complex strategies are only used if they are
+necessary. The method returns when the sudoku is solved or when no more possibilities could be removed
+and no more numbers could be filled in.
+\end{itemize}
+\section{Used Strategies}
+Following are the strategies that are used in this particular order based on complexity.
+\subsection{OneOfEach}
+Removes possibilities in a cell by looking at remaining possibilities in 
+rows, columns and squares.
+\subsection{Locked}
+Searches for 2 or 3 possibilities in a column that are the same and don't 
+occur in another place in the square if so remove those possibilities on 
+every other place on the same column.
+\subsection{DoubleLocked}
+Searches for possibilities that occurs in one row (or column) in a square
+and another row (or column) in another square so that blocks possibilities
+in those rows (or columns) in the third square.
+\subsection{NakedGroup}
+\subsection{HiddenTwin}
+\subsection{ForcingTwin}
+Looks at the consequences of filling the possibilities of a cell with two
+possibilities, removes a possibility if that possibility will be removed in
+both cases.
+
+\section{Style Guide}
+The \href{http://www.oracle.com/technetwork/java/javase/documentation/codeconvtoc-136057.html}{Oracle Code Conventions for Java}
+are used as a guideline in naming of methods and types, commenting styles and code layout.
+\end{document}
