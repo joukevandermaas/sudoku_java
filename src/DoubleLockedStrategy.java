@@ -71,6 +71,7 @@ public class DoubleLockedStrategy extends LockedStrategy {
 		return result;
 	}
 
+	// tries to find another square that has the same activated rows
 	private int findNextRowSquare(int squareNum, int digit, List<Integer> rows,
 			CellContainer[] squares) throws SudokuException {
 		int squaresPerRow = Sudoku.SUDOKU_SIZE / Sudoku.SQUARE_COLUMNS;
@@ -97,6 +98,7 @@ public class DoubleLockedStrategy extends LockedStrategy {
 		return -1;
 	}
 
+	// tries to find another square that has the same activated columns
 	private int findNextColSquare(int squareNum, int digit, List<Integer> cols,
 			CellContainer[] squares) throws SudokuException {
 		int squaresPerCol = Sudoku.SUDOKU_SIZE / Sudoku.SQUARE_ROWS;
