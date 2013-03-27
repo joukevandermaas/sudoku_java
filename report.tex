@@ -84,8 +84,8 @@ The solver, sudoku representation and UI also support sudokus of other sizes (i.
 sudoku), but no support was added for loading these from a file.
 
 \subsection{Terminology}
-A sudoku consists of nine \emph{rows}, \emph{columns} and \emph{squares}, called containers. Each of these
-contains nine cells. Cells can have a value (numbers one through nine) or a set of up to nine possibilities.
+A sudoku consists of nine rows, columns and squares, called \emph{containers}. Each of these
+contains nine \emph{cells}. Cells can have a value (numbers one through nine) or a set of up to nine possibilities.
 
 \subsection{End-states}
 The solver uses strategies to reduce the sudoku to one of the two end-states.
@@ -126,7 +126,7 @@ complex strategy and can slow the solver down quite a bit.
 
 \section{Results}
 On the provided file \texttt{big5} (containing $10.000$ sudokus), the solver performs with a 
-accuracy of $99.9$ \%:
+accuracy of $99.9\%$:
 \begin{verbatim}
 Puzzles: 10000
 Solved: 9989 (99.9%)
@@ -134,8 +134,8 @@ Invalid puzzles: 0
 Time: 72.26s (7.23ms average per puzzle)
 \end{verbatim}
 
-The accuracy on harder puzzles (such as the provided \texttt{top100}) it is a similar
-accuracy, but it a lot slower:
+The accuracy on harder puzzles (such as the provided \texttt{top100}) is similar,
+but a lot slower:
 \begin{verbatim}
 Puzzles: 100
 Solved: 99 (99.0%)
@@ -153,7 +153,7 @@ Invalid puzzles: 0
 Time: 16.69s (170.27ms average per puzzle)
 \end{verbatim}
 
-Overall the solver can solve most puzzles (about 99\% of the harder ones) and solves them on average pretty fast.
+Overall the solver can solve most puzzles (about 99\% of the harder ones) and solves them pretty fast on average.
 
 \end{document}
 
