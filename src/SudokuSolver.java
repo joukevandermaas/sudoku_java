@@ -26,6 +26,8 @@ public class SudokuSolver {
 		
 		if(args.length > 0) {
 			filename = args[0];
+		} else {
+			errorExit("Syntax:\njava SudokuSolver <filename> [-b] [max depth]");
 		}
 		
 		for(int i = 1; i < args.length; i++) {
